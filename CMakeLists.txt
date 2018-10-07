@@ -21,3 +21,6 @@ foreach(_source IN ITEMS ${HDR_FILES} ${SRC_FILES})
 endforeach()
 
 target_compile_definitions(libmathxcore PUBLIC -DLIBMATHXCORE_BUILD_LIB)
+
+set(MATHXCORE_LIMB_SIZE "8" CACHE STRING "limb size")
+target_compile_definitions(libmathxcore PUBLIC -DLIBMATHXCORE_LIMB_SIZE=${MATHXCORE_LIMB_SIZE})
