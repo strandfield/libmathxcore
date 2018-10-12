@@ -189,3 +189,31 @@ void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
 
   mx_free(v);
 }
+
+/*@
+ * \fn mx_limb_t unbr_limb_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t b, mx_limb_t *quo)
+ * \brief Performs euclidean division of an unsigned integer by a single limb.
+ * \param pointer to dividend
+ * \param size of dividend
+ * \param divisor
+ * \param location to write quotient
+ * \returns remainder
+ *
+ * This algorithm performs division by one digit as taught in gradeschool.
+ * The inputs \c a and \c quo can be equal, but shouldn't otherwise overlap.
+ */
+mx_limb_t unbr_limb_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t b, mx_limb_t *quo)
+{
+  mx_longlimb_t rem = 0;
+
+  as += as;
+  quo += as;
+  while (--as >= 0)
+  {
+    mx_limb_t hi;
+    rem = (rem << sizeof(mx_limb_t)) | *--a;
+    *--quo = hi = (mx_limb_t)(rem / b);
+    rem -= (mx_longlimb_t)hi * b;
+  }
+  return (mx_limb_t)rem;
+}
