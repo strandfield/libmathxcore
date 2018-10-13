@@ -23,4 +23,6 @@ void LIBMATHXCORE_API nbr_clear(mx_int_t *x);
 
 void LIBMATHXCORE_API nbr_assign(mx_int_t *dest, const mx_int_t *src);
 
+void LIBMATHXCORE_API nbr_swap(mx_int_t *a, mx_int_t *b);
+
 #endif // LIBMATHXCORE_INTEGER_H

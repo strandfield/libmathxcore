@@ -124,3 +124,17 @@ void nbr_assign(mx_int_t *dest, const mx_int_t *src)
   dest->size = src->size;
   memcpy(dest->limbs, src->limbs, srcsize * sizeof(mx_limb_t));
 }
+
+/*@
+ * \fn void nbr_swap(mx_int_t *a, mx_int_t *b)
+ * \brief Swaps two integers
+ * \param first value
+ * \param second value
+ */
+void nbr_swap(mx_int_t *a, mx_int_t *b)
+{
+  const mx_int_t c = *b;
+
+  *b = *a;
+  *a = c;
+}
