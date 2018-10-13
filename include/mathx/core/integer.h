@@ -26,4 +26,6 @@ LIBMATHXCORE_API void nbr_assign_zero(mx_int_t *dest);
 
 void LIBMATHXCORE_API nbr_swap(mx_int_t *a, mx_int_t *b);
 
+LIBMATHXCORE_API int nbr_sign(const mx_int_t *x);
+
 #endif // LIBMATHXCORE_INTEGER_H

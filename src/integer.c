@@ -149,3 +149,15 @@ void nbr_swap(mx_int_t *a, mx_int_t *b)
   *b = *a;
   *a = c;
 }
+
+/*@
+ * \fn int nbr_sign(const mx_int_t *x)
+ * \brief Returns the sign of an integer.
+ * \param input value
+ * \returns -1, 0 or 1
+ */
+int nbr_sign(const mx_int_t *x)
+{
+  return x->size == 0 ? 0 : (x->size < 0 ? -1 : 1);
+}
+
