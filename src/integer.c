@@ -126,6 +126,17 @@ void nbr_assign(mx_int_t *dest, const mx_int_t *src)
 }
 
 /*@
+ * \fn void nbr_assign_zero(mx_int_t *dest)
+ * \brief Assigns the value 0 to an integer
+ * \param receiver
+ */
+void nbr_assign_zero(mx_int_t *dest)
+{
+  memset(dest->limbs, 0, abs(dest->size) * sizeof(mx_limb_t));
+  dest->size = 0;
+}
+
+/*@
  * \fn void nbr_swap(mx_int_t *a, mx_int_t *b)
  * \brief Swaps two integers
  * \param first value
