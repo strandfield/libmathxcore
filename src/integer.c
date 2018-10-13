@@ -3,6 +3,7 @@
 
 #include "mathx/core/memory.h"
 
+#include <stdlib.h> // abs
 #include <string.h>
 
 /*@
@@ -97,4 +98,29 @@ void nbr_clear(mx_int_t *x)
   mx_free(x->limbs);
   x->size = 0;
   x->alloc = 0;
+}
+
+/*@
+ * \fn void nbr_assign(mx_int_t *dest, const mx_int_t *src)
+ * \brief Performs integer assignment.
+ * \param receiver
+ * \param value to assign
+ */
+void nbr_assign(mx_int_t *dest, const mx_int_t *src)
+{
+  const mx_size_t srcsize = abs(src->size);
+
+  if (dest->alloc < srcsize)
+  {
+    mx_free(dest->limbs);
+    dest->limbs = mx_malloc(srcsize, &(dest->alloc));
+    memset(dest->limbs + srcsize, 0, (dest->alloc - srcsize) * sizeof(mx_limb_t));
+  }
+  else if(srcsize < (mx_size_t) abs(dest->size))
+  {
+    memset(dest->limbs + srcsize, 0, (abs(dest->size) - srcsize) * sizeof(mx_limb_t));
+  }
+
+  dest->size = src->size;
+  memcpy(dest->limbs, src->limbs, srcsize * sizeof(mx_limb_t));
 }
