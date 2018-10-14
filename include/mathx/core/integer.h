@@ -28,4 +28,6 @@ void LIBMATHXCORE_API nbr_swap(mx_int_t *a, mx_int_t *b);
 
 LIBMATHXCORE_API int nbr_sign(const mx_int_t *x);
 
+#include "mathx/core/add.h"
+
 #endif // LIBMATHXCORE_INTEGER_H
