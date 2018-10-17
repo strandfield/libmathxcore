@@ -38,7 +38,7 @@ void nbr_add(mx_int_t *sum, const mx_int_t *addend1, const mx_int_t *addend2)
         sum->limbs = mx_malloc(result_size, &(sum->alloc));
       }
       sum->size = unbr_add(addend1->limbs, abs(addend1->size), addend2->limbs, abs(addend2->size), sum->limbs);
-      memset(sum->limbs, 0, (sum->alloc - sum->size) * sizeof(mx_limb_t));
+      memset(sum->limbs + sum->size, 0, (sum->alloc - sum->size) * sizeof(mx_limb_t));
       sum->size *= nbr_sign(addend1);
     }
     else
@@ -69,7 +69,7 @@ void nbr_add(mx_int_t *sum, const mx_int_t *addend1, const mx_int_t *addend2)
         }
 
         sum->size = unbr_sub(large->limbs, abs(large->size), small->limbs, abs(small->size), sum->limbs);
-        memset(sum->limbs, 0, (sum->alloc - sum->size) * sizeof(mx_limb_t));
+        memset(sum->limbs + sum->size, 0, (sum->alloc - sum->size) * sizeof(mx_limb_t));
         sum->size *= nbr_sign(large);
       }
     }
