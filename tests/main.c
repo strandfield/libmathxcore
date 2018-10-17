@@ -167,12 +167,149 @@ Test(integer_addition, opposite_signs)
 TestSuite(integer_addition, carry_propagation_single_limb, carry_propagation_two_limbs, add_zero, opposite_signs);
 
 
+Test(integer_subtraction, signs)
+{
+  mx_int_t a, b, c;
+
+  nbr_limb_init(&a, 4);
+  nbr_limb_init(&b, 0);
+  nbr_init(&c);
+
+  // 4 - 0 = 4
+  nbr_sub(&c, &a, &b);
+  Assert(nbr_comp(&a, &c) == 0);
+ 
+  // 0 - 4 = -4
+  nbr_sub(&c, &b, &a);
+  Assert(c.size == -1);
+  Assert(c.limbs[0] == 4);
+
+  // 4 - 2 = 2
+  nbr_clear(&b);
+  nbr_limb_init(&b, 2);
+  nbr_sub(&c, &a, &b);
+  Assert(c.size == 1);
+  Assert(c.limbs[0] == 2);
+
+  // 2 - 4 = -2
+  nbr_sub(&c, &b, &a);
+  Assert(c.size == -1);
+  Assert(c.limbs[0] == 2);
+
+  // -4 - -2 = -(4-2) = -2
+  a.size *= -1;
+  b.size *= -1;
+  nbr_sub(&c, &a, &b);
+  Assert(c.size == -1);
+  Assert(c.limbs[0] == 2);
+
+  // -2 - -4 = 4 - 2 = 2
+  nbr_sub(&c, &b, &a);
+  Assert(c.size == 1);
+  Assert(c.limbs[0] == 2);
+
+  // -4 - -4 = 0
+  nbr_sub(&c, &a, &a);
+  Assert(c.size == 0);
+
+  // -2 - 4 = -6
+  b.size = -1;
+  a.size = 1;
+  nbr_sub(&c, &b, &a);
+  Assert(c.size == -1);
+  Assert(c.limbs[0] == 6);
+
+  // 2 - -4 = 6
+  b.size = 1;
+  a.size = -1;
+  nbr_sub(&c, &b, &a);
+  Assert(c.size == 1);
+  Assert(c.limbs[0] == 6);
+
+  nbr_clear(&a);
+  nbr_clear(&b);
+  nbr_clear(&c);
+}
+
+Test(integer_subtraction, borrow)
+{
+  mx_int_t a, b, c;
+
+  mx_limb_t max_digit = 0;
+  max_digit = ~max_digit;
+
+
+  // 1*b^2 - 1 = b*(b-1) + (b-1)
+  nbr_raw_init(&a, 3, mx_malloc_zero(4, NULL), 4);
+  a.limbs[2] = 1;
+  nbr_limb_init(&b, 1);
+  nbr_init(&c);
+  nbr_sub(&c, &a, &b);
+  Assert(c.size == 2);
+  Assert(c.limbs[0] == max_digit);
+  Assert(c.limbs[1] == max_digit);
+
+  nbr_clear(&a);
+  nbr_clear(&b);
+  nbr_clear(&c);
+}
+
+
+Test(integer_subtraction, cancelation)
+{
+  mx_int_t a, b, c;
+
+  mx_limb_t max_digit = 0;
+  max_digit = ~max_digit;
+
+  nbr_raw_init(&a, 3, mx_malloc_zero(4, NULL), 4);
+  nbr_limb_init(&b, 1);
+  nbr_init(&c);
+
+  // (1*b^2 + 1*b + 2) - (1*b^2 + 1*b + 1)
+  a.limbs[2] = 1;
+  a.limbs[1] = 1;
+  a.limbs[0] = 2;
+  a.size = 3;
+  nbr_clear(&b);
+  nbr_raw_init(&b, 3, mx_malloc_zero(4, NULL), 4);
+  b.limbs[2] = 1;
+  b.limbs[1] = 1;
+  b.limbs[0] = 1;
+  nbr_sub(&c, &a, &b);
+  Assert(c.size == 1);
+  Assert(c.limbs[0] == 1);
+
+  // (1*b^2 + 1*b + 1) - (1*b^2 + 1*b + 1)
+  a.limbs[0] = 1;
+  nbr_sub(&c, &a, &b);
+  Assert(c.size == 0);
+
+  // (1*b^3 + 1*b^2 + 2*b + 1) - (1*b^3 + 1*b^2 + 1*b + 1)
+  a.limbs[3] = 1;
+  a.limbs[1] = 2;
+  a.size = 4;
+  b.limbs[3] = 1;
+  b.size = 4;
+  nbr_sub(&c, &a, &b);
+  Assert(c.size == 2);
+  Assert(c.limbs[1] == 1);
+  Assert(c.limbs[0] == 0);
+
+  nbr_clear(&a);
+  nbr_clear(&b);
+  nbr_clear(&c);
+}
+
+TestSuite(integer_subtraction, signs, borrow, cancelation);
+
 int main(int argc, char *argv[])
 {
   init_test_framework();
 
   register_test(&integer_comparison);
   register_test(&integer_addition);
+  register_test(&integer_subtraction);
 
   run_all_tests();
 
