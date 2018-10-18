@@ -36,9 +36,9 @@ mx_size_t unbr_long_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx
     {
       limb_mul += *b_it * multiplier + *r_it;
       *r_it = (mx_limb_t)limb_mul;
-      limb_mul >>= sizeof(mx_limb_t);
+      limb_mul >>= sizeofbits(mx_limb_t);
 
-      assert(limb_mul <= ((mx_longlimb_t) -1) >> sizeof(mx_limb_t));
+      assert(limb_mul <= ((mx_longlimb_t) -1) >> sizeofbits(mx_limb_t));
 
       b_it++; r_it++;
     }
@@ -46,7 +46,7 @@ mx_size_t unbr_long_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx
     if (limb_mul)
       *r_it += (mx_limb_t)limb_mul; // TODO: would '=' be enough here ?
 
-    assert((limb_mul >> sizeof(mx_limb_t)) == 0);
+    assert((limb_mul >> sizeofbits(mx_limb_t)) == 0);
   }
 
   i = as + bs;

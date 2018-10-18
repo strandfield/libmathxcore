@@ -9,7 +9,7 @@
  * \brief Shifts an unsigned integer left.
  * \param pointer to the least-signficant limb of the integer
  * \param size of the integer
- * \param shift amount, must be less than sizeof(mx_limb_t)
+ * \param shift amount, must be less than sizeof(mx_limb_t)*8
  * \param pointer to the least-significant limb of the result
  * \returns the shifted out most significant bits
  *
@@ -23,9 +23,9 @@ mx_limb_t unbr_lshift(const mx_limb_t *a, mx_size_t as, mx_size_t shift_amount, 
   mx_limb_t acc = 0;
   mx_limb_t ret = 0;
 
-  assert(0 <= shift_amount && shift_amount < sizeof(mx_limb_t));
+  assert(0 <= shift_amount && shift_amount < sizeofbits(mx_limb_t));
 
-  shift_complement = sizeof(mx_limb_t) - shift_amount;
+  shift_complement = sizeofbits(mx_limb_t) - shift_amount;
 
   for (i = 0; i < as; ++i) 
   {
@@ -58,9 +58,9 @@ mx_limb_t unbr_lshift_overlap(const mx_limb_t *a, mx_size_t as, mx_size_t shift_
     return unbr_lshift(a, as, shift_amount, dest);
   }
 
-  assert(0 <= shift_amount && shift_amount < sizeof(mx_limb_t));
+  assert(0 <= shift_amount && shift_amount < sizeofbits(mx_limb_t));
 
-  shift_complement = sizeof(mx_limb_t) - shift_amount;
+  shift_complement = sizeofbits(mx_limb_t) - shift_amount;
 
   ret = a[as - 1] >> shift_complement;
 
@@ -79,7 +79,7 @@ mx_limb_t unbr_lshift_overlap(const mx_limb_t *a, mx_size_t as, mx_size_t shift_
  * \brief Shifts an unsigned integer right.
  * \param pointer to the least-signficant limb of the integer
  * \param size of the integer
- * \param shift amount, must be less than sizeof(mx_limb_t)
+ * \param shift amount, must be less than sizeof(mx_limb_t)*8
  * \param pointer to the least-significant limb of the result
  * \returns the shifted out least significant bits
  *
@@ -98,7 +98,7 @@ mx_limb_t unbr_rshift(const mx_limb_t *a, mx_size_t as, mx_size_t shift_amount, 
 
   assert(0 <= shift_amount && shift_amount < sizeof(mx_limb_t));
 
-  shift_complement = sizeof(mx_limb_t) - shift_amount;
+  shift_complement = sizeofbits(mx_limb_t) - shift_amount;
 
   for (i = as; i-- > 0;) 
   {
@@ -131,9 +131,9 @@ mx_limb_t unbr_rshift_overlap(const mx_limb_t *a, mx_size_t as, mx_size_t shift_
     return unbr_lshift(a, as, shift_amount, dest);
   }
 
-  assert(0 <= shift_amount && shift_amount < sizeof(mx_limb_t));
+  assert(0 <= shift_amount && shift_amount < sizeofbits(mx_limb_t));
 
-  shift_complement = sizeof(mx_limb_t) - shift_amount;
+  shift_complement = sizeofbits(mx_limb_t) - shift_amount;
 
   ret = a[0] << shift_complement;
 

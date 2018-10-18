@@ -27,12 +27,12 @@
 // size n in base DECIMAL_BASE.
 //   number of digits = 1 + floor(log2(a) / log2(DECIMAL_BASE))
 // Using 
-//   log2(a) < as * sizeof(mx_limb_t)
+//   log2(a) < as * sizeof(mx_limb_t)*8
 // and
 //   log2(DECIMAL_BASE) = log2(10) * DECIMAL_SHIFT > 3 * DECIMAL_SHIFT
 mx_size_t mx_print_helper_size_upper_bound(const mx_size_t n)
 {
-  return 1 + (n * sizeof(mx_limb_t)) / (3 * DECIMAL_SHIFT);
+  return 1 + (n * sizeofbits(mx_limb_t)) / (3 * DECIMAL_SHIFT);
 }
 
 /*@
@@ -64,7 +64,7 @@ mx_size_t unbr_print(const mx_limb_t *a, const mx_size_t as, char *output)
     mx_limb_t hi = a[i];
     for (j = 0; j < size; j++)
     {
-      mx_longlimb_t z = ((mx_longlimb_t) out[j] << sizeof(mx_limb_t)) | hi;
+      mx_longlimb_t z = ((mx_longlimb_t) out[j] << sizeofbits(mx_limb_t)) | hi;
       hi = (mx_limb_t)(z / DECIMAL_BASE);
       out[j] = (mx_limb_t)(z - (mx_longlimb_t)hi * DECIMAL_BASE);
     }

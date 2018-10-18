@@ -75,7 +75,7 @@ void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
   mx_size_t d; // the amount by which u and v are shifted during normalisation
   mx_limb_t *uk, *qk;
   mx_longlimb_t q_tilde;
-  const mx_longlimb_t base = 1 << sizeof(mx_limb_t);
+  const mx_longlimb_t base = 1 << sizeofbits(mx_limb_t);
   const mx_longlimb_t single_digit_mask = base - 1;
 
   // We allocate space to store the shifted divisor, and 
@@ -96,7 +96,7 @@ void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
   // zero to $u$.
   // This step ensures that q_tilde is always a very good approximation 
   // of the true quotient digit.
-  d = sizeof(mx_limb_t) - bits_in_digit(v[size_v-1]);
+  d = sizeofbits(mx_limb_t) - bits_in_digit(v[size_v-1]);
   mx_limb_t normalization_output = unbr_lshift(b, bs, d, v);
   assert(normalization_output == 0);
   normalization_output = unbr_lshift(a, as, d, u);
@@ -124,10 +124,10 @@ void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
     // We may rarely overestimate by 1.
     const mx_limb_t utop = uk[size_v];
     assert(utop <= vm1);
-    const mx_limb_t uu = ((mx_longlimb_t)utop << sizeof(mx_limb_t)) | uk[size_v - 1];
+    const mx_limb_t uu = ((mx_longlimb_t)utop << sizeofbits(mx_limb_t)) | uk[size_v - 1];
     q_tilde = (uu / vm1);
     mx_longlimb_t r = (uu - vm1 * q_tilde); /* r = uu % vm1 */
-    while (vm2 * q_tilde > ((r << sizeof(mx_limb_t)) | uk[size_v - 2]))
+    while (vm2 * q_tilde > ((r << sizeofbits(mx_limb_t)) | uk[size_v - 2]))
     {
       --q_tilde;
       r += vm1;
@@ -144,7 +144,7 @@ void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
     mx_limb_t zhi = 0;
     for (mx_size_t i = 0; i < size_v; ++i) {
       const mx_longlimb_t z = zhi + q_tilde * (mx_longlimb_t)v[i];
-      zhi = z >> sizeof(mx_limb_t);
+      zhi = z >> sizeofbits(mx_limb_t);
       if (uk[i] < (z & single_digit_mask)) { zhi += 1; }
       uk[i] -= (z & single_digit_mask);
     }
@@ -165,7 +165,7 @@ void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
       {
         carry += uk[i] + v[i];
         uk[i] = (mx_limb_t)carry;
-        carry >>= sizeof(mx_limb_t);
+        carry >>= sizeofbits(mx_limb_t);
       }
       --q_tilde;
     }
@@ -211,7 +211,7 @@ mx_limb_t unbr_limb_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t b, mx_
   while (--as >= 0)
   {
     mx_limb_t hi;
-    rem = (rem << sizeof(mx_limb_t)) | *--a;
+    rem = (rem << sizeofbits(mx_limb_t)) | *--a;
     *--quo = hi = (mx_limb_t)(rem / b);
     rem -= (mx_longlimb_t)hi * b;
   }

@@ -41,5 +41,6 @@ typedef uint64_t mx_limb_t;
 # error "libmathxcore : no limb size defined"
 #endif
 
+#define sizeofbits(x) (8 * sizeof(x))
 
 #endif // LIBMATHXCORE_DEFS_H
