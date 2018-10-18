@@ -303,6 +303,121 @@ Test(integer_subtraction, cancelation)
 
 TestSuite(integer_subtraction, signs, borrow, cancelation);
 
+
+Test(integer_multiplication, basics)
+{
+  mx_int_t a, b, c;
+
+  mx_limb_t max_digit = 0;
+  max_digit = ~max_digit;
+
+  nbr_limb_init(&a, 6);
+  nbr_init(&b);
+  nbr_init(&c);
+
+  // 6 * 0
+  nbr_mul(&c, &a, &b);
+  Assert(c.size == 0);
+
+  // 6 * (1*b)
+  nbr_clear(&b);
+  nbr_raw_init(&b, 2, mx_malloc_zero(2, NULL), 2);
+  b.limbs[1] = 1;
+  nbr_mul(&c, &a, &b);
+  Assert(c.size == 2);
+  Assert(c.limbs[0] == 0);
+  Assert(c.limbs[1] == 6);
+
+  // (1*b^2 + 1) * (1*b^3 + b)
+  nbr_clear(&a);
+  nbr_raw_init(&a, 3, mx_malloc_zero(3, NULL), 3);
+  a.limbs[0] = 1;
+  a.limbs[2] = 1;
+  nbr_clear(&b);
+  nbr_raw_init(&b, 4, mx_malloc_zero(4, NULL), 4);
+  b.limbs[1] = 1;
+  b.limbs[3] = 1;
+  nbr_mul(&c, &a, &b);
+  Assert(c.size == 6);
+  Assert(c.limbs[0] == 0);
+  Assert(c.limbs[1] == 1);
+  Assert(c.limbs[2] == 0);
+  Assert(c.limbs[3] == 2);
+  Assert(c.limbs[4] == 0);
+  Assert(c.limbs[5] == 1);
+
+  // (b/2) * (b/2)
+  nbr_clear(&a);
+  nbr_limb_init(&a, 1 << (sizeofbits(mx_limb_t) / 2));
+  nbr_clear(&b);
+  nbr_limb_init(&b, 1 << (sizeofbits(mx_limb_t) / 2));
+  nbr_mul(&c, &a, &b);
+  Assert(c.size == 2);
+  Assert(c.limbs[0] == 0);
+  Assert(c.limbs[1] == 1);
+
+  // (b/2) * (1*b + b/2)
+  nbr_clear(&a);
+  nbr_limb_init(&a, 1 << (sizeofbits(mx_limb_t) / 2));
+  nbr_clear(&b);
+  nbr_raw_init(&b, 2, mx_malloc_zero(2, NULL), 2);
+  b.limbs[0] = 1 << (sizeofbits(mx_limb_t) / 2);
+  b.limbs[1] = 1;
+  nbr_mul(&c, &a, &b);
+  Assert(c.size == 2);
+  Assert(c.limbs[0] == 0);
+  Assert(c.limbs[1] == 1 + (1 << (sizeofbits(mx_limb_t) / 2)));
+
+
+  nbr_clear(&a);
+  nbr_clear(&b);
+  nbr_clear(&c);
+}
+
+Test(integer_multiplication, signs)
+{
+  mx_int_t a, b, c;
+
+  mx_limb_t max_digit = 0;
+  max_digit = ~max_digit;
+
+  nbr_limb_init(&a, 6);
+  nbr_limb_init(&b, 7);
+  nbr_init(&c);
+
+  // 6 * 7
+  nbr_mul(&c, &a, &b);
+  Assert(c.size == 1);
+  Assert(c.limbs[0] == 42);
+
+  // -6 * -7
+  a.size = -1;
+  b.size = -1;
+  nbr_mul(&c, &a, &b);
+  Assert(c.size == 1);
+  Assert(c.limbs[0] == 42);
+
+  // -6 * 7
+  b.size = 1;
+  nbr_mul(&c, &a, &b);
+  Assert(c.size == -1);
+  Assert(c.limbs[0] == 42);
+
+  // 6 * -7
+  a.size = 1;
+  b.size = -1;
+  nbr_mul(&c, &a, &b);
+  Assert(c.size == -1);
+  Assert(c.limbs[0] == 42);
+
+  nbr_clear(&a);
+  nbr_clear(&b);
+  nbr_clear(&c);
+}
+
+TestSuite(integer_multiplication, basics, signs);
+
+
 int main(int argc, char *argv[])
 {
   init_test_framework();
@@ -310,6 +425,7 @@ int main(int argc, char *argv[])
   register_test(&integer_comparison);
   register_test(&integer_addition);
   register_test(&integer_subtraction);
+  register_test(&integer_multiplication);
 
   run_all_tests();
 

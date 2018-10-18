@@ -30,6 +30,7 @@ LIBMATHXCORE_API int nbr_sign(const mx_int_t *x);
 
 #include "mathx/core/add.h"
 #include "mathx/core/comp.h"
+#include "mathx/core/mul.h"
 #include "mathx/core/sub.h"
 
 #endif // LIBMATHXCORE_INTEGER_H
