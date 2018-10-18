@@ -31,7 +31,7 @@ void nbr_add(mx_int_t *sum, const mx_int_t *addend1, const mx_int_t *addend2)
   {
     if (nbr_sign(addend1) == nbr_sign(addend2))
     {
-      mx_size_t result_size = abs(addend1->size) + abs(addend2->size) + 1;
+      mx_size_t result_size = max(abs(addend1->size), abs(addend2->size)) + 1;
       if (sum->alloc < result_size)
       {
         mx_free(sum->limbs);
