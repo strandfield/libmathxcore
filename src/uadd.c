@@ -46,3 +46,32 @@ mx_size_t unbr_add(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size
 
   return i;
 }
+
+
+/*@
+ * \fn mx_limb_t unbr_limb_incr(const mx_limb_t *a, mx_size_t as, mx_limb_t b)
+ * \brief Increments an unsigned integer by a limb and returns the final carry.
+ * \param pointer to the least-signficant limb of the integer
+ * \param limb to be added
+ * \returns the carry that should be written in a[as]
+ *
+ */
+mx_limb_t unbr_limb_incr(mx_limb_t *a, mx_size_t as, mx_limb_t b)
+{
+  mx_limb_t carry;
+  mx_size_t i;
+
+  if (as == 0 || b == 0)
+    return b;
+
+  a[0] = a[0] + b;
+  carry = a[0] < b;
+
+  for (i = 1; carry && i < as; ++i)
+  {
+    a[i] = a[i] + 1;
+    carry = a[i] == 0;
+  }
+
+  return carry;
+}
