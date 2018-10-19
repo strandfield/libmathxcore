@@ -101,6 +101,39 @@ void nbr_clear(mx_int_t *x)
 }
 
 /*@
+ * \fn int nbr_is_normalized(mx_int_t *x)
+ * \brief Returns whether the input is in its normalized form.
+ */
+int nbr_is_normalized(const mx_int_t *x)
+{
+  const mx_size_t s = abs(x->size);
+  mx_size_t i = s;
+
+  for (; i < x->alloc; ++i)
+  {
+    if (x->limbs[i] != 0)
+      return 0;
+  }
+
+  if (s != 0 && x->limbs[s - 1] == 0)
+    return 0;
+
+  return 1;
+}
+
+/*@
+ * \fn void nbr_normalize(mx_int_t *x)
+ * \brief Normalizes its input.
+ */
+void nbr_normalize(mx_int_t *x)
+{
+  mx_size_t s = abs(x->size);
+  memset(x->limbs + s, 0, (x->alloc - s) * sizeof(mx_limb_t));
+  while (s > 0 && x->limbs[s - 1] == 0) --s;
+  x->size = s * (x->size < 0 ? -1 : 1);
+}
+
+/*@
  * \fn void nbr_assign(mx_int_t *dest, const mx_int_t *src)
  * \brief Performs integer assignment.
  * \param receiver

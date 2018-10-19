@@ -21,6 +21,9 @@ void LIBMATHXCORE_API nbr_raw_init(mx_int_t *x, mx_ssize_t size, mx_limb_t *limb
 
 void LIBMATHXCORE_API nbr_clear(mx_int_t *x);
 
+LIBMATHXCORE_API int nbr_is_normalized(const mx_int_t *x);
+LIBMATHXCORE_API void nbr_normalize(mx_int_t *x);
+
 void LIBMATHXCORE_API nbr_assign(mx_int_t *dest, const mx_int_t *src);
 LIBMATHXCORE_API void nbr_assign_zero(mx_int_t *dest);
 
