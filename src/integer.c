@@ -134,6 +134,65 @@ void nbr_normalize(mx_int_t *x)
 }
 
 /*@
+ * \fn void nbr_ensure_alloc(mx_int_t *x, mx_size_t s)
+ * \brief Ensures enough limbs are allocated.
+ * \param pointer to integer object
+ * \param number of limbs that needs to be allocated
+ *
+ * Ensures \c x can be manipulated as if there were exactly \c s limbs allocated.
+ * In other words, this function will allocate new limbs if not enough are already 
+ * allocated, and/or will memset to zero limbs with index \c{>= s}.
+ *
+ * The size field of \c x is left unchanged, so calling this function might 
+ * result in \c x being left in a non-normalized form.
+ *
+ * This function is mainly for internal purpose.
+ */
+void nbr_ensure_alloc(mx_int_t *x, mx_size_t s)
+{
+  if (x->alloc < s)
+  {
+    mx_free(x->limbs);
+    x->limbs = mx_malloc(s, &(x->alloc));
+    memset(x->limbs + s, 0, (x->alloc - s) * sizeof(mx_limb_t));
+  }
+  else
+  {
+    if (s < abs(x->size))
+    {
+      memset(x->limbs + s, 0, (abs(x->size) - s) * sizeof(mx_limb_t));
+    }
+  }
+}
+
+/*@
+ * \fn void nbr_ensure_alloc_zero(mx_int_t *x, mx_size_t s)
+ * \brief Ensures enough limbs are allocated and set to zero.
+ * \param pointer to integer object
+ * \param number of limbs that needs to be allocated
+ *
+ * Ensures \c x can be manipulated as if there were exactly \c s zero-initialized limbs allocated.
+ *
+ * The size field of \c x is left unchanged, so calling this function might
+ * result in \c x being left in a non-normalized form.
+ *
+ * This function is mainly for internal purpose.
+ */
+void nbr_ensure_alloc_zero(mx_int_t *x, mx_size_t s)
+{
+  if (x->alloc < s)
+  {
+    mx_free(x->limbs);
+    x->limbs = mx_malloc_zero(s, &(x->alloc));
+  }
+  else
+  {
+    memset(x->limbs, 0, abs(x->size) * sizeof(mx_limb_t));
+  }
+}
+
+
+/*@
  * \fn void nbr_assign(mx_int_t *dest, const mx_int_t *src)
  * \brief Performs integer assignment.
  * \param receiver
