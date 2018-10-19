@@ -75,3 +75,32 @@ void nbr_add(mx_int_t *sum, const mx_int_t *addend1, const mx_int_t *addend2)
     }
   }
 }
+
+/*@
+ * \fn void nbr_limb_abs_incr(mx_int_t *x, mx_limb_t y)
+ * \brief Increments the absolute value of an integer.
+ * \param variable to increment
+ * \param value to add
+ *
+ * This function treats \c x as if it was an unsigned integer and 
+ * adds \c y to it.
+ */
+void nbr_limb_abs_incr(mx_int_t *x, mx_limb_t y)
+{
+  mx_limb_t carry = unbr_limb_incr(x->limbs, abs(x->size), y);
+
+  if (carry)
+  {
+    if (x->alloc == (mx_size_t)abs(x->size))
+    {
+      mx_limb_t *limbs = x->limbs;
+      x->limbs = mx_malloc(x->alloc + 1, &(x->alloc));
+      memcpy(x->limbs, limbs, abs(x->size) * sizeof(mx_limb_t));
+      mx_free(limbs);
+      memset(x->limbs + abs(x->size), 0, (x->alloc - abs(x->size)) * sizeof(mx_limb_t));
+    }
+
+    x->limbs[abs(x->size)] = carry;
+    x->size = (abs(x->size) + 1) * (x->size < 0 ? -1 : 1);
+  }
+}
