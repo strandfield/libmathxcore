@@ -4,6 +4,8 @@
 #include "mathx/core/integer.h"
 #include "mathx/core/memory.h"
 
+#include <string.h>
+
 
 Test(integer_comparison, same_size)
 {
@@ -468,6 +470,56 @@ Test(integer_division, basics)
 TestSuite(integer_division, basics);
 
 
+Test(integer_utils, to_string)
+{
+  const mx_size_t buffer_size = 1024;
+  char buffer[1024] = { 0 };
+
+  mx_int_t a;
+  nbr_init(&a);
+
+  // 0
+  mx_size_t written = nbr_print(buffer, buffer_size, &a);
+  Assert(written == 1);
+  Assert(buffer[0] == '0');
+
+  // -128
+  nbr_ensure_alloc(&a, 1);
+  a.size = -1;
+  a.limbs[0] = 128;
+  written = nbr_print(buffer, buffer_size, &a);
+  Assert(written == 4);
+  Assert(strcmp(buffer, "-128") == 0);
+
+  // 128*128 = 16384
+  mx_int_t b;
+  nbr_init(&b);
+  nbr_mul(&b, &a, &a);
+  nbr_print(buffer, buffer_size, &b);
+  Assert(strcmp(buffer, "16384") == 0);
+
+  // 16384*16384 = 268435456
+  nbr_mul(&a, &b, &b);
+  nbr_print(buffer, buffer_size, &a);
+  Assert(strcmp(buffer, "268435456") == 0);
+
+  // 268435456 * 268435456 = 72057594037927936
+  nbr_mul(&b, &a, &a);
+  nbr_print(buffer, buffer_size, &b);
+  Assert(strcmp(buffer, "72057594037927936") == 0);
+
+  // 72057594037927936 * 72057594037927936 = 5192296858534827628530496329220096
+  nbr_mul(&a, &b, &b);
+  written = nbr_print(buffer, buffer_size, &a);
+  Assert(written == 34);
+  Assert(strcmp(buffer, "5192296858534827628530496329220096") == 0);
+
+  nbr_clear(&a);
+}
+
+TestSuite(integer_utils, to_string);
+
+
 int main(int argc, char *argv[])
 {
   init_test_framework();
@@ -477,6 +529,7 @@ int main(int argc, char *argv[])
   register_test(&integer_subtraction);
   register_test(&integer_multiplication);
   register_test(&integer_division);
+  register_test(&integer_utils);
 
   run_all_tests();
 

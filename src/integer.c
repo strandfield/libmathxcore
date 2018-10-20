@@ -2,6 +2,7 @@
 #include "mathx/core/integer.h"
 
 #include "mathx/core/memory.h"
+#include "mathx/core/print.h"
 
 #include <stdlib.h> // abs
 #include <string.h>
@@ -253,3 +254,45 @@ int nbr_sign(const mx_int_t *x)
   return x->size == 0 ? 0 : (x->size < 0 ? -1 : 1);
 }
 
+
+/*@
+ * \fn mx_size_t nbr_print(char *out, mx_size_t s, const mx_int_t *x)
+ * \brief Writes the decimal representation of an integer
+ * \param pointer to output
+ * \param size of the output buffer
+ * \param integer to print
+ * \returns number of char written (excluding null-terminator)
+ *
+ * This function starts by computing an upper bound of the number of char 
+ * that will be written. If the buffer is smaller than this upper bound, 
+ * no char are written and this function returns zero. 
+ */
+mx_size_t nbr_print(char *out, mx_size_t s, const mx_int_t *x)
+{
+  if (s < 2)
+    return 0;
+
+  if (x->size == 0)
+  {
+    out[0] = '0';
+    out[1] = '\0';
+    return 1;
+  }
+
+  // upper_bound = sign + #digits + null-terminator
+  const mx_size_t upper_bound = (x->size < 0 ? 1 : 0) + unbr_print_size(x->limbs, abs(x->size)) + 1;
+  if (s < upper_bound)
+    return 0;
+  
+  mx_size_t written = 0;
+
+  if (x->size < 0)
+  {
+    *(out++) = '-';
+    written += 1;
+  }
+
+  written += unbr_print(x->limbs, abs(x->size), out);
+
+  return written;
+}

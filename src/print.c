@@ -117,3 +117,16 @@ mx_size_t unbr_print(const mx_limb_t *a, const mx_size_t as, char *output)
 
   return strlen;
 }
+
+/*@
+ * \fn mx_size_t unbr_print_size(const mx_limb_t *a, const mx_size_t as)
+ * \brief Returns an estimate of the number of characters in the string representation of an integer.
+ * \param pointer to the least-signficant limb of the integer
+ * \param size of the integer
+ * \returns an upper bound of the number of char required to display the integer
+ *
+ */
+mx_size_t unbr_print_size(const mx_limb_t *a, const mx_size_t as)
+{
+  return mx_print_helper_size_upper_bound(as) * DECIMAL_SHIFT;
+}
