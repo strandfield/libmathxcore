@@ -37,7 +37,7 @@ static mx_size_t bits_in_digit(mx_limb_t d)
  * This function assumes:
  * \begin{list}
  *   \li as >= bs >= 2
- *   \li at least as-bs limbs can be written in quo
+ *   \li at least 1+as-bs limbs can be written in quo
  *   \li at least as+1 limbs can be written in rem
  * \end{list}
  *
