@@ -418,6 +418,56 @@ Test(integer_multiplication, signs)
 TestSuite(integer_multiplication, basics, signs);
 
 
+Test(integer_division, basics)
+{
+  mx_int_t a, b, q, r;
+
+  mx_limb_t max_digit = 0;
+  max_digit = ~max_digit;
+
+  nbr_raw_init(&a, 2, mx_malloc(2, NULL), 2);
+  a.limbs[0] = 1;
+  a.limbs[1] = 1;
+  nbr_limb_init(&b, 2);
+  nbr_init(&q);
+  nbr_init(&r);
+
+  // (1*b + 1) / 2 -> rem = 1, quo = b >> 1
+  nbr_div(&q, &r, &a, &b);
+  Assert(r.size == 1);
+  Assert(r.limbs[0] == 1);
+  Assert(q.size == 1);
+  Assert(q.limbs[0] == (1 << (sizeofbits(mx_limb_t) - 1)));
+
+  //
+  nbr_ensure_alloc(&q, 2);
+  nbr_ensure_alloc(&r, 3);
+  q.size = 2;
+  q.limbs[0] = 1;
+  q.limbs[1] = 1;
+  r.size = 3;
+  r.limbs[0] = 2;
+  r.limbs[1] = 2;
+  r.limbs[2] = 2;
+  nbr_mul(&a, &q, &r);
+  nbr_limb_abs_incr(&a, 64);
+  nbr_assign(&b, &r);
+  nbr_div(&q, &r, &a, &b);
+  Assert(r.size == 1);
+  Assert(r.limbs[0] == 64);
+  Assert(q.size == 2);
+  Assert(q.limbs[0] == 1);
+  Assert(q.limbs[1] == 1);
+
+  nbr_clear(&a);
+  nbr_clear(&b);
+  nbr_clear(&q);
+  nbr_clear(&r);
+}
+
+TestSuite(integer_division, basics);
+
+
 int main(int argc, char *argv[])
 {
   init_test_framework();
@@ -426,6 +476,7 @@ int main(int argc, char *argv[])
   register_test(&integer_addition);
   register_test(&integer_subtraction);
   register_test(&integer_multiplication);
+  register_test(&integer_division);
 
   run_all_tests();
 
