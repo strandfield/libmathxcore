@@ -59,7 +59,7 @@ mx_size_t unbr_print(const mx_limb_t *a, const mx_size_t as, char *output)
   // using Method 1b) of section 4.4 of Knuth.
   // This basically comes down to computing sum(a[i]*b^i) in base DECIMAL_BASE.
   size = 0;
-  for (i = as; --i >= 0; ) 
+  for (i = as; i-- > 0; ) 
   {
     mx_limb_t hi = a[i];
     for (j = 0; j < size; j++)
