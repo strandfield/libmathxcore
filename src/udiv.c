@@ -206,9 +206,9 @@ mx_limb_t unbr_limb_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t b, mx_
 {
   mx_longlimb_t rem = 0;
 
-  as += as;
+  a += as;
   quo += as;
-  while (--as >= 0)
+  while (as-- > 0)
   {
     mx_limb_t hi;
     rem = (rem << sizeofbits(mx_limb_t)) | *--a;
