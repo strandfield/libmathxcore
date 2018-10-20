@@ -158,7 +158,7 @@ void nbr_ensure_alloc(mx_int_t *x, mx_size_t s)
   }
   else
   {
-    if (s < abs(x->size))
+    if (s < (mx_size_t) abs(x->size))
     {
       memset(x->limbs + s, 0, (abs(x->size) - s) * sizeof(mx_limb_t));
     }
