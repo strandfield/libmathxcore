@@ -91,6 +91,70 @@ void nbr_raw_init(mx_int_t *x, mx_ssize_t size, mx_limb_t *limbs, mx_size_t allo
 }
 
 /*@
+ * \fn void nbr_string_init(mx_int_t *x, const char *str)
+ * \brief Initializes an integer from a string.
+ * \param the integer to initialize
+ * \param null-terminated char string
+ *
+ */
+void nbr_string_init(mx_int_t *x, const char *str)
+{
+#if LIBMATHXCORE_LIMB_SIZE == 8
+#define DECIMAL_BASE 100
+#define DECIMAL_SHIFT 2
+#elif LIBMATHXCORE_LIMB_SIZE == 16
+#define DECIMAL_BASE 10000
+#define DECIMAL_SHIFT 4
+#else
+#define DECIMAL_BASE 1000000000
+#define DECIMAL_SHIFT 9
+#endif
+
+  nbr_init(x);
+
+  mx_int_t base;
+  nbr_limb_init(&base, DECIMAL_BASE);
+
+  mx_int_t buffer;
+  nbr_init(&buffer);
+
+  mx_ssize_t sign = 1;
+  if (str[0] == '-')
+  {
+    sign = -1;
+    str++;
+  }
+  else if (str[0] == '+')
+  {
+    str++;
+  }
+
+  while (*str != '\0')
+  {
+    mx_limb_t limb = 0;
+    base.limbs[0] = 1;
+    while (*str != '\0' && base.limbs[0] < DECIMAL_BASE)
+    {
+      limb = limb * 10 + (*str - '0');
+      ++str;
+      base.limbs[0] *= 10;
+    }
+
+    nbr_mul(&buffer, x, &base);
+    nbr_swap(&buffer, x);
+    nbr_limb_abs_incr(x, limb);
+  }
+
+  x->size *= sign;
+
+  nbr_clear(&base);
+  nbr_clear(&buffer);
+
+#undef DECIMAL_BASE
+#undef DECIMAL_SHIFT
+}
+
+/*@
  * \fn void nbr_clear(mx_int_t *x)
  * \brief Releases any memory used by an arbitrary-precision integer.
  */

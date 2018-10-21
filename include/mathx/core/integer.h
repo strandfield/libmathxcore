@@ -18,6 +18,7 @@ void LIBMATHXCORE_API nbr_init(mx_int_t *x);
 void LIBMATHXCORE_API nbr_copy_init(mx_int_t *x, const mx_int_t *src);
 void LIBMATHXCORE_API nbr_limb_init(mx_int_t *x, const mx_limb_t value);
 void LIBMATHXCORE_API nbr_raw_init(mx_int_t *x, mx_ssize_t size, mx_limb_t *limbs, mx_size_t alloc);
+LIBMATHXCORE_API void nbr_string_init(mx_int_t *x, const char *str);
 
 void LIBMATHXCORE_API nbr_clear(mx_int_t *x);
 

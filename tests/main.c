@@ -517,7 +517,35 @@ Test(integer_utils, to_string)
   nbr_clear(&a);
 }
 
-TestSuite(integer_utils, to_string);
+Test(integer_utils, from_string)
+{
+  const mx_size_t buffer_size = 1024;
+  char buffer[1024] = { 0 };
+
+  mx_int_t a;
+  nbr_string_init(&a, "10");
+  nbr_print(buffer, buffer_size, &a);
+  Assert(strcmp(buffer, "10") == 0);
+  nbr_clear(&a);
+
+  nbr_string_init(&a, "123456789");
+  nbr_print(buffer, buffer_size, &a);
+  Assert(strcmp(buffer, "123456789") == 0);
+  nbr_clear(&a);
+
+  nbr_string_init(&a, "+15248675986452315264857956842153624578568");
+  nbr_print(buffer, buffer_size, &a);
+  Assert(strcmp(buffer, "15248675986452315264857956842153624578568") == 0);
+  nbr_clear(&a);
+
+  nbr_string_init(&a, "-1235648575472136548045");
+  nbr_print(buffer, buffer_size, &a);
+  Assert(a.size < 0);
+  Assert(strcmp(buffer, "-1235648575472136548045") == 0);
+  nbr_clear(&a);
+}
+
+TestSuite(integer_utils, to_string, from_string);
 
 
 int main(int argc, char *argv[])
