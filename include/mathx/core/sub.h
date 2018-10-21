@@ -6,4 +6,6 @@
 
 LIBMATHXCORE_API void nbr_sub(mx_int_t *difference, const mx_int_t *minuend, const mx_int_t *subtrahend);
 
+LIBMATHXCORE_API void nbr_limb_abs_decr(mx_int_t *x, mx_limb_t y);
+
 #endif // LIBMATHXCORE_SUB_H

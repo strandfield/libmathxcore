@@ -69,3 +69,33 @@ mx_size_t unbr_sub(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size
     return as - 1;
   return as;
 }
+
+/*@
+ * \fn mx_limb_t unbr_limb_decr(mx_limb_t *a, mx_size_t as, mx_limb_t b)
+ * \brief Decrements an unsigned integer by a limb and returns the final borrow.
+ * \param pointer to the least-signficant limb of the integer
+ * \param limb to be subtracted
+ * \returns the final borrow
+ *
+ */
+mx_limb_t unbr_limb_decr(mx_limb_t *a, mx_size_t as, mx_limb_t b)
+{
+  mx_limb_t borrow;
+  mx_size_t i;
+
+  if (as == 0 || b == 0)
+  {
+    return b;
+  }
+
+  borrow = a[0] < (a[0] - b);
+  a[0] = a[0] - b;
+
+  for (i = 1; borrow && i < as; ++i)
+  {
+    borrow = (a[i] == 0);
+    a[i] = a[i] - 1;
+  }
+
+  return borrow;
+}

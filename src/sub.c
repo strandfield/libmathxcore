@@ -6,6 +6,7 @@
 #include "mathx/core/ucomp.h"
 #include "mathx/core/usub.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -76,4 +77,23 @@ void nbr_sub(mx_int_t *difference, const mx_int_t *minuend, const mx_int_t *subt
       }
     }
   }
+}
+
+/*@
+ * \fn void nbr_limb_abs_decr(mx_int_t *x, mx_limb_t y)
+ * \brief Decrements the absolute value of an integer.
+ * \param variable to decrement
+ * \param value to subtract
+ *
+ * This function treats \c x as if it was an unsigned integer and 
+ * subtracts \c y from it.
+ * This function assumes that \c{abs(x) >= y}. 
+ */
+void nbr_limb_abs_decr(mx_int_t *x, mx_limb_t y)
+{
+  mx_limb_t borrow = unbr_limb_decr(x->limbs, abs(x->size), y);
+  assert(borrow == 0);
+
+  if (x->limbs[abs(x->size) - 1] == 0)
+    x->size = (x->size < 0 ? -1 : 1) * (abs(x->size) - 1);
 }
