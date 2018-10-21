@@ -3,6 +3,7 @@
 
 #include "mathx/core/memory.h"
 #include "mathx/core/print.h"
+#include "mathx/core/shift.h"
 
 #include <stdlib.h> // abs
 #include <string.h>
@@ -332,6 +333,61 @@ int nbr_sign(const mx_int_t *x)
   return x->size == 0 ? 0 : (x->size < 0 ? -1 : 1);
 }
 
+/*@
+ * \fn void nbr_rightshift(mx_int_t *result, const mx_int_t *x, mx_size_t n)
+ * \brief Shifts an integer right.
+ * \param variable to store the result
+ * \param input integer
+ * \param shift amount
+ * 
+ */
+void nbr_rightshift(mx_int_t *result, const mx_int_t *x, mx_size_t n)
+{
+  const mx_size_t limb_shift = n / sizeofbits(mx_limb_t);
+
+  if (limb_shift >= (mx_size_t) abs(x->size))
+  {
+    nbr_assign_zero(result);
+  }
+  else
+  {
+    n -= limb_shift * sizeofbits(mx_limb_t);
+    nbr_ensure_alloc(result, abs(x->size) - limb_shift);
+    result->size = abs(x->size) - limb_shift;
+    result->limbs[result->size - 1] = 0;
+    unbr_rshift(x->limbs + limb_shift, result->size, n, result->limbs);
+    if (result->limbs[result->size - 1] == 0)
+      result->size -= 1;
+    result->size *= nbr_sign(x);
+  }
+}
+
+/*@
+ * \fn void nbr_rightshiftmx_int_t *x, mx_size_t n)
+ * \brief Shifts an integer right.
+ * \param integer to shift right
+ * \param shift amount
+ * 
+ */
+void nbr_rightshift_assign(mx_int_t *x, mx_size_t n)
+{
+  const mx_size_t limb_shift = n / sizeofbits(mx_limb_t);
+
+  if (limb_shift >= (mx_size_t) abs(x->size))
+  {
+    nbr_assign_zero(x);
+  }
+  else
+  {
+    n -= limb_shift * sizeofbits(mx_limb_t);
+    mx_size_t result_size = abs(x->size) - limb_shift;
+    unbr_rshift_overlap(x->limbs + limb_shift, result_size, n, x->limbs);
+    if (x->limbs[result_size - 1] == 0)
+      result_size -= 1;
+    memset(x->limbs + result_size, 0, (abs(x->size) - result_size) * sizeof(mx_limb_t));
+    x->size *= result_size * nbr_sign(x);
+  }
+}
 
 /*@
  * \fn mx_size_t nbr_print(char *out, mx_size_t s, const mx_int_t *x)

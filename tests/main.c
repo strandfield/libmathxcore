@@ -733,8 +733,32 @@ Test(integer_functions, bezout)
   Assert(eq(&v, "1"));
 }
 
+#include "mathx/core/isqrt.h"
 
-TestSuite(integer_functions, factorial, gcd, bezout);
+Test(integer_functions, isqrt)
+{
+  mx_int_t a;
+  mx_int_t b;
+
+  nbr_limb_init(&a, 0);
+  nbr_init(&b);
+
+  // isqrt(0) = 0
+  nbr_isqrt(&b, &a);
+  Assert(eq(&b, "0"));
+
+  // isqrt(44) = 6
+  nbr_limb_assign(&a, 44);
+  nbr_isqrt(&b, &a);
+  Assert(eq(&b, "6"));
+
+  // isqrt(144) = 12
+  nbr_limb_assign(&a, 144);
+  nbr_isqrt(&b, &a);
+  Assert(eq(&b, "12"));
+}
+
+TestSuite(integer_functions, factorial, gcd, bezout, isqrt);
 
 
 int main(int argc, char *argv[])

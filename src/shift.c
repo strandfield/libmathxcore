@@ -96,7 +96,7 @@ mx_limb_t unbr_rshift(const mx_limb_t *a, mx_size_t as, mx_size_t shift_amount, 
   mx_limb_t acc = 0;
   mx_limb_t ret = 0;
 
-  assert(0 <= shift_amount && shift_amount < sizeof(mx_limb_t));
+  assert(0 <= shift_amount && shift_amount < sizeofbits(mx_limb_t));
 
   shift_complement = sizeofbits(mx_limb_t) - shift_amount;
 
@@ -128,7 +128,7 @@ mx_limb_t unbr_rshift_overlap(const mx_limb_t *a, mx_size_t as, mx_size_t shift_
 
   if (((mx_size_t)abs(dist)) >= as || dist >= 0 || as == 0)
   {
-    return unbr_lshift(a, as, shift_amount, dest);
+    return unbr_rshift(a, as, shift_amount, dest);
   }
 
   assert(0 <= shift_amount && shift_amount < sizeofbits(mx_limb_t));
