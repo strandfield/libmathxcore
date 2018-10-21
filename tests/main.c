@@ -688,7 +688,53 @@ Test(integer_functions, gcd)
   Assert(strcmp(buffer, "4") == 0);
 }
 
-TestSuite(integer_functions, factorial, gcd);
+#include "mathx/core/bezout.h"
+
+int eq(const mx_int_t *x, const char *str)
+{
+  const mx_size_t buffer_size = 1024;
+  char buffer[1024] = { 0 };
+  nbr_print(buffer, buffer_size, x);
+  return strcmp(buffer, str) == 0;
+}
+
+Test(integer_functions, bezout)
+{
+  mx_int_t a;
+  mx_int_t b;
+  mx_int_t u;
+  mx_int_t v;
+  mx_int_t gcd;
+
+  nbr_limb_init(&a, 2);
+  nbr_limb_init(&b, 1);
+  nbr_init(&u);
+  nbr_init(&v);
+  nbr_init(&gcd);
+
+  // gcd(2, 1) = 1 = 0 * 2 + 1 * 1
+  nbr_gcd_bezout(&gcd, &a, &b, &u, &v);
+  Assert(eq(&u, "0"));
+  Assert(eq(&v, "1"));
+
+  // gcd(12, 28) = 4 = (-2) * 12 + 1 * 28
+  nbr_limb_assign(&a, 12);
+  nbr_limb_assign(&b, 28);
+  nbr_gcd_bezout(&gcd, &a, &b, &u, &v);
+  Assert(eq(&u, "-2"));
+  Assert(eq(&v, "1"));
+
+  // gcd(-12, 28) = 4 = 2 * (-12) + 1*28
+  nbr_limb_assign(&a, 12);
+  a.size = -1;
+  nbr_limb_assign(&b, 28);
+  nbr_gcd_bezout(&gcd, &a, &b, &u, &v);
+  Assert(eq(&u, "2"));
+  Assert(eq(&v, "1"));
+}
+
+
+TestSuite(integer_functions, factorial, gcd, bezout);
 
 
 int main(int argc, char *argv[])
