@@ -30,6 +30,7 @@ LIBMATHXCORE_API void nbr_ensure_alloc_zero(mx_int_t *x, mx_size_t s);
 
 void LIBMATHXCORE_API nbr_assign(mx_int_t *dest, const mx_int_t *src);
 LIBMATHXCORE_API void nbr_assign_zero(mx_int_t *dest);
+LIBMATHXCORE_API void nbr_limb_assign(mx_int_t *dest, const mx_limb_t limb);
 
 void LIBMATHXCORE_API nbr_swap(mx_int_t *a, mx_int_t *b);
 

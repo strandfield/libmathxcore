@@ -293,6 +293,20 @@ void nbr_assign_zero(mx_int_t *dest)
   dest->size = 0;
 }
 
+void nbr_limb_assign(mx_int_t *dest, const mx_limb_t limb)
+{
+  if (limb == 0)
+  {
+    nbr_assign_zero(dest);
+  }
+  else
+  {
+    nbr_ensure_alloc(dest, 1);
+    dest->limbs[0] = limb;
+    dest->size = 1;
+  }
+}
+
 /*@
  * \fn void nbr_swap(mx_int_t *a, mx_int_t *b)
  * \brief Swaps two integers
