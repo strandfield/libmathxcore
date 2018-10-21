@@ -596,6 +596,59 @@ Test(integer_utils, from_string)
 TestSuite(integer_utils, to_string, from_string);
 
 
+#include "mathx/core/factorial.h"
+
+Test(integer_functions, factorial)
+{
+  const mx_size_t buffer_size = 1024;
+  char buffer[1024] = { 0 };
+
+  mx_int_t a;
+  mx_int_t b;
+
+  nbr_init(&a);
+  nbr_limb_init(&b, 1);
+  b.size = -1;
+
+  // negative number -> returns 0
+  nbr_factorial(&a, &b);
+  nbr_print(buffer, buffer_size, &a);
+  Assert(strcmp(buffer, "0") == 0);
+
+  // 0! = 1
+  nbr_limb_assign(&b, 0);
+  nbr_factorial(&a, &b);
+  nbr_print(buffer, buffer_size, &a);
+  Assert(strcmp(buffer, "1") == 0);
+
+  // 1! = 1
+  nbr_limb_assign(&b, 1);
+  nbr_factorial(&a, &b);
+  nbr_print(buffer, buffer_size, &a);
+  Assert(strcmp(buffer, "1") == 0);
+
+  // 2! = 2
+  nbr_limb_assign(&b, 2);
+  nbr_factorial(&a, &b);
+  nbr_print(buffer, buffer_size, &a);
+  Assert(strcmp(buffer, "2") == 0);
+
+  // 3! = 6
+  nbr_limb_assign(&b, 3);
+  nbr_factorial(&a, &b);
+  nbr_print(buffer, buffer_size, &a);
+  Assert(strcmp(buffer, "6") == 0);
+
+  // 30! = 265252859812191058636308480000000
+  nbr_limb_assign(&b, 30);
+  nbr_factorial(&a, &b);
+  nbr_print(buffer, buffer_size, &a);
+  Assert(strcmp(buffer, "265252859812191058636308480000000") == 0);
+}
+
+TestSuite(integer_functions, factorial);
+
+
 int main(int argc, char *argv[])
 {
   init_test_framework();
@@ -606,6 +659,7 @@ int main(int argc, char *argv[])
   register_test(&integer_multiplication);
   register_test(&integer_division);
   register_test(&integer_utils);
+  register_test(&integer_functions);
 
   run_all_tests();
 
