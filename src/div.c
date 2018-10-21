@@ -25,7 +25,7 @@ void nbr_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, 
     return;
   }
 
-  if (divisor->size == 1)
+  if (abs(divisor->size) == 1)
   {
     nbr_ensure_alloc(quotient, abs(dividend->size));
 
@@ -62,10 +62,14 @@ void nbr_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, 
     mx_int_t temp;
     nbr_init(&temp);
 
-    if (dividend->size < 0 && divisor->size < 0)
+    mx_int_t absdivisor;
+    absdivisor.limbs = divisor->limbs;
+    absdivisor.size = abs(divisor->size);
+
+    if (dividend->size < 0)
     {
       nbr_limb_abs_incr(quotient, 1);
-      nbr_sub(&temp, divisor, remainder);
+      nbr_sub(&temp, &absdivisor, remainder);
       nbr_swap(remainder, &temp);
 
       quotient->size *= (divisor->size < 0 ? 1 : -1);
