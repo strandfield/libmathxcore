@@ -646,7 +646,49 @@ Test(integer_functions, factorial)
   Assert(strcmp(buffer, "265252859812191058636308480000000") == 0);
 }
 
-TestSuite(integer_functions, factorial);
+#include "mathx/core/gcd.h"
+
+Test(integer_functions, gcd)
+{
+  const mx_size_t buffer_size = 1024;
+  char buffer[1024] = { 0 };
+
+  mx_int_t a;
+  mx_int_t b;
+  mx_int_t gcd;
+
+  nbr_limb_init(&a, 2);
+  nbr_limb_init(&b, 1);
+  nbr_init(&gcd);
+
+  // gcd(2, 1) = 1
+  nbr_gcd(&gcd, &a, &b);
+  nbr_print(buffer, buffer_size, &gcd);
+  Assert(strcmp(buffer, "1") == 0);
+
+  // gcd(10, 5) = 5
+  nbr_limb_assign(&a, 10);
+  nbr_limb_assign(&b, 5);
+  nbr_gcd(&gcd, &a, &b);
+  nbr_print(buffer, buffer_size, &gcd);
+  Assert(strcmp(buffer, "5") == 0);
+
+  // gcd(9, 7) = 1
+  nbr_limb_assign(&a, 9);
+  nbr_limb_assign(&b, 7);
+  nbr_gcd(&gcd, &a, &b);
+  nbr_print(buffer, buffer_size, &gcd);
+  Assert(strcmp(buffer, "1") == 0);
+
+  // gcd(12, 28) = 4
+  nbr_limb_assign(&a, 12);
+  nbr_limb_assign(&b, 28);
+  nbr_gcd(&gcd, &a, &b);
+  nbr_print(buffer, buffer_size, &gcd);
+  Assert(strcmp(buffer, "4") == 0);
+}
+
+TestSuite(integer_functions, factorial, gcd);
 
 
 int main(int argc, char *argv[])
