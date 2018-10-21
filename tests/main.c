@@ -467,7 +467,55 @@ Test(integer_division, basics)
   nbr_clear(&r);
 }
 
-TestSuite(integer_division, basics);
+Test(integer_division, signs)
+{
+  mx_int_t a, b, q, r;
+
+  nbr_limb_init(&a, 7);
+  nbr_limb_init(&b, 3);
+  nbr_init(&q);
+  nbr_init(&r);
+
+  // 7 = 3 * 2 + 1
+  nbr_div(&q, &r, &a, &b);
+  Assert(r.size == 1);
+  Assert(r.limbs[0] == 1);
+  Assert(q.size == 1);
+  Assert(q.limbs[0] == 2);
+
+  // 7 = -3 * -2 + 1
+  b.size = -1;
+  nbr_div(&q, &r, &a, &b);
+  Assert(r.size == 1);
+  Assert(r.limbs[0] == 1);
+  Assert(q.size == -1);
+  Assert(q.limbs[0] == 2);
+
+  // -7 = 3 * -3 + 2
+  a.size = -1;
+  b.size = 1;
+  nbr_div(&q, &r, &a, &b);
+  Assert(r.size == 1);
+  Assert(r.limbs[0] == 2);
+  Assert(q.size == -1);
+  Assert(q.limbs[0] == 3);
+
+  // -7 = -3 * 3 + 2
+  a.size = -1;
+  b.size = -1;
+  nbr_div(&q, &r, &a, &b);
+  Assert(r.size == 1);
+  Assert(r.limbs[0] == 2);
+  Assert(q.size == 1);
+  Assert(q.limbs[0] == 3);
+
+  nbr_clear(&a);
+  nbr_clear(&b);
+  nbr_clear(&q);
+  nbr_clear(&r);
+}
+
+TestSuite(integer_division, basics, signs);
 
 
 Test(integer_utils, to_string)
