@@ -334,6 +334,34 @@ int nbr_sign(const mx_int_t *x)
 }
 
 /*@
+ * \fn void nbr_negate(mx_int_t *y, const mx_int_t *x)
+ * \brief Computes the opposite of an integer
+ * \param integer that will receive the result
+ * \param input integer
+ *
+ * Informally, performs \c{y = -x}.
+ */
+void nbr_negate(mx_int_t *y, const mx_int_t *x)
+{
+  nbr_assign(y, x);
+  y->size *= -1;
+}
+
+/*@
+ * \fn void nbr_abs(mx_int_t *y, const mx_int_t *x)
+ * \brief Computes the absolute value of an integer
+ * \param integer that will receive the result
+ * \param input integer
+ *
+ * Informally, performs \c{y = abs(x)}.
+ */
+void nbr_abs(mx_int_t *y, const mx_int_t *x)
+{
+  nbr_assign(y, x);
+  y->size = abs(y->size);
+}
+
+/*@
  * \fn void nbr_rightshift(mx_int_t *result, const mx_int_t *x, mx_size_t n)
  * \brief Shifts an integer right.
  * \param variable to store the result

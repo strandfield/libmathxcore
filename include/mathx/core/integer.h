@@ -35,6 +35,8 @@ LIBMATHXCORE_API void nbr_limb_assign(mx_int_t *dest, const mx_limb_t limb);
 void LIBMATHXCORE_API nbr_swap(mx_int_t *a, mx_int_t *b);
 
 LIBMATHXCORE_API int nbr_sign(const mx_int_t *x);
+LIBMATHXCORE_API void nbr_negate(mx_int_t *y, const mx_int_t *x);
+LIBMATHXCORE_API void nbr_abs(mx_int_t *y, const mx_int_t *x);
 
 LIBMATHXCORE_API void nbr_rightshift(mx_int_t *result, const mx_int_t *x, mx_size_t n);
 LIBMATHXCORE_API void nbr_rightshift_assign(mx_int_t *x, mx_size_t n);
