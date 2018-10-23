@@ -23,7 +23,7 @@ static mx_size_t bits_in_digit(mx_limb_t d)
 }
 
 /*@
- * \fn void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *quo, mx_size_t *quos, mx_limb_t *rem, mx_size_t *rems)
+ * \fn void uint_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *quo, mx_size_t *quos, mx_limb_t *rem, mx_size_t *rems)
  * \brief Performs euclidean division of unsigned integers using Knuth division algorithm.
  * \param pointer to dividend
  * \param size of dividend
@@ -49,7 +49,7 @@ static mx_size_t bits_in_digit(mx_limb_t d)
  * A thorough description of the algorithm is available in section 4.3.1 of
  * The Art of Computer Programming, Vol. 2 by Donald Knuth.
  */
-void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *quo, mx_size_t *quos, mx_limb_t *rem, mx_size_t *rems)
+void uint_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *quo, mx_size_t *quos, mx_limb_t *rem, mx_size_t *rems)
 {
   /* The following is an implementation of Algorithm D of section 4.3.1 
    * of The Art of Computer Programming, Vol. 2 by Knuth.
@@ -97,9 +97,9 @@ void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
   // This step ensures that q_tilde is always a very good approximation 
   // of the true quotient digit.
   d = sizeofbits(mx_limb_t) - bits_in_digit(v[size_v-1]);
-  mx_limb_t normalization_output = unbr_lshift(b, bs, d, v);
+  mx_limb_t normalization_output = uint_lshift(b, bs, d, v);
   assert(normalization_output == 0);
-  normalization_output = unbr_lshift(a, as, d, u);
+  normalization_output = uint_lshift(a, as, d, u);
   if (normalization_output != 0 || u[size_u - 1] >= v[size_v - 1]) 
   {
     u[size_u] = normalization_output;
@@ -178,7 +178,7 @@ void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
   
   // D8. Unormalize
   // We un-normalize u to get the correct remainder.
-  normalization_output = unbr_rshift(u, size_v, d, u);
+  normalization_output = uint_rshift(u, size_v, d, u);
   assert(normalization_output == 0);
 
   while (size_u > 0 && u[size_u - 1] == 0) --size_u;
@@ -191,7 +191,7 @@ void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
 }
 
 /*@
- * \fn mx_limb_t unbr_limb_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t b, mx_limb_t *quo)
+ * \fn mx_limb_t uint_limb_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t b, mx_limb_t *quo)
  * \brief Performs euclidean division of an unsigned integer by a single limb.
  * \param pointer to dividend
  * \param size of dividend
@@ -202,7 +202,7 @@ void unbr_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
  * This algorithm performs division by one digit as taught in gradeschool.
  * The inputs \c a and \c quo can be equal, but shouldn't otherwise overlap.
  */
-mx_limb_t unbr_limb_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t b, mx_limb_t *quo)
+mx_limb_t uint_limb_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t b, mx_limb_t *quo)
 {
   mx_longlimb_t rem = 0;
 

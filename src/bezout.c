@@ -4,7 +4,7 @@
 #include "mathx/core/euclide.h"
 
 /*@
- * \fn void nbr_gcd_bezout(mx_int_t *gcd, const mx_int_t *a, const mx_int_t *b, mx_int_t *u, mx_int_t *v)
+ * \fn void int_gcd_bezout(mx_int_t *gcd, const mx_int_t *a, const mx_int_t *b, mx_int_t *u, mx_int_t *v)
  * \brief Computes the gcd of two integers and the coefficients of Bézout's identity.
  * \param variable to receive the gcd
  * \param first integer
@@ -14,7 +14,7 @@
  *
  * Currently this function uses the extended euclidean algorithm.
  */
-void nbr_gcd_bezout(mx_int_t *gcd, const mx_int_t *a, const mx_int_t *b, mx_int_t *u, mx_int_t *v)
+void int_gcd_bezout(mx_int_t *gcd, const mx_int_t *a, const mx_int_t *b, mx_int_t *u, mx_int_t *v)
 {
-  nbr_extended_euclidean_algorithm(gcd, a, b, u, v);
+  int_extended_euclidean_algorithm(gcd, a, b, u, v);
 }

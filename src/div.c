@@ -8,7 +8,7 @@
 #include <string.h>
 
 /*@
- * \fn void nbr_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, const mx_int_t *divisor)
+ * \fn void int_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, const mx_int_t *divisor)
  * \brief Performs euclidean division.
  * \param variable that will receive the quotient
  * \param variable that will receive the remainder
@@ -17,7 +17,7 @@
  *
  * Note that the remainder is always non-negative, i.e. \c{0 <= remainder < abs(divisor)}.
  */
-void nbr_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, const mx_int_t *divisor)
+void int_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, const mx_int_t *divisor)
 {
   if (divisor->size == 0)
   {
@@ -27,9 +27,9 @@ void nbr_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, 
 
   if (abs(divisor->size) == 1)
   {
-    nbr_ensure_alloc(quotient, abs(dividend->size));
+    int_ensure_alloc(quotient, abs(dividend->size));
 
-    mx_limb_t remval = unbr_limb_div(dividend->limbs, abs(dividend->size), divisor->limbs[0], quotient->limbs);
+    mx_limb_t remval = uint_limb_div(dividend->limbs, abs(dividend->size), divisor->limbs[0], quotient->limbs);
 
     quotient->size = abs(dividend->size);
     while (quotient->size > 0 && quotient->limbs[quotient->size - 1] == 0) quotient->size -= 1;
@@ -41,7 +41,7 @@ void nbr_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, 
     }
     else
     {
-      nbr_ensure_alloc(remainder, 1);
+      int_ensure_alloc(remainder, 1);
 
       remainder->limbs[0] = remval;
       remainder->size = 1;
@@ -49,18 +49,18 @@ void nbr_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, 
   }
   else
   {
-    nbr_ensure_alloc(quotient, 1 + abs(dividend->size) - abs(divisor->size));
-    nbr_ensure_alloc(remainder, 1 + abs(dividend->size));
-    remainder->limbs[remainder->size] = 0; /// TODO: check if needed, or maybe modify unbr_knuth_div
+    int_ensure_alloc(quotient, 1 + abs(dividend->size) - abs(divisor->size));
+    int_ensure_alloc(remainder, 1 + abs(dividend->size));
+    remainder->limbs[remainder->size] = 0; /// TODO: check if needed, or maybe modify uint_knuth_div
 
-    unbr_knuth_div(dividend->limbs, abs(dividend->size), divisor->limbs, abs(divisor->size), quotient->limbs, &(quotient->size), remainder->limbs, &(remainder->size));
+    uint_knuth_div(dividend->limbs, abs(dividend->size), divisor->limbs, abs(divisor->size), quotient->limbs, &(quotient->size), remainder->limbs, &(remainder->size));
   }
 
 
   if (dividend->size < 0 || divisor->size < 0)
   {
     mx_int_t temp;
-    nbr_init(&temp);
+    int_init(&temp);
 
     mx_int_t absdivisor;
     absdivisor.limbs = divisor->limbs;
@@ -68,9 +68,9 @@ void nbr_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, 
 
     if (dividend->size < 0)
     {
-      nbr_limb_abs_incr(quotient, 1);
-      nbr_sub(&temp, &absdivisor, remainder);
-      nbr_swap(remainder, &temp);
+      int_limb_abs_incr(quotient, 1);
+      int_sub(&temp, &absdivisor, remainder);
+      int_swap(remainder, &temp);
 
       quotient->size *= (divisor->size < 0 ? 1 : -1);
     }
@@ -79,6 +79,6 @@ void nbr_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, 
       quotient->size *= -1;
     }
 
-    nbr_clear(&temp);
+    int_clear(&temp);
   }
 }

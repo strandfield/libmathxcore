@@ -2,7 +2,7 @@
 #include "mathx/core/usub.h"
 
 /*@
- * \fn mx_size_t unbr_sub(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
+ * \fn mx_size_t uint_sub(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
  * \brief Subtracts two unsigned integers.
  * \param pointer to the least-signficant limb of the first integer
  * \param size of the first integer
@@ -14,7 +14,7 @@
  * This function assumes that \c{a} is greater than \c{b}, and that there is enough space to write 
  * the result in \c{result}.
  */
-mx_size_t unbr_sub(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
+mx_size_t uint_sub(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
 {
   mx_limb_t borrow = 0;
   mx_size_t i = 0;
@@ -71,14 +71,14 @@ mx_size_t unbr_sub(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size
 }
 
 /*@
- * \fn mx_limb_t unbr_limb_decr(mx_limb_t *a, mx_size_t as, mx_limb_t b)
+ * \fn mx_limb_t uint_limb_decr(mx_limb_t *a, mx_size_t as, mx_limb_t b)
  * \brief Decrements an unsigned integer by a limb and returns the final borrow.
  * \param pointer to the least-signficant limb of the integer
  * \param limb to be subtracted
  * \returns the final borrow
  *
  */
-mx_limb_t unbr_limb_decr(mx_limb_t *a, mx_size_t as, mx_limb_t b)
+mx_limb_t uint_limb_decr(mx_limb_t *a, mx_size_t as, mx_limb_t b)
 {
   mx_limb_t borrow;
   mx_size_t i;

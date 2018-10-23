@@ -17,11 +17,11 @@
 
 
 /*@
- * \fn void nbr_init(mx_int_t *x)
+ * \fn void int_init(mx_int_t *x)
  * \brief Zero-initialize an integer.
  * \param the integer to initialize
  */
-void nbr_init(mx_int_t *x)
+void int_init(mx_int_t *x)
 {
   x->size = 0;
   x->alloc = 0;
@@ -29,12 +29,12 @@ void nbr_init(mx_int_t *x)
 }
 
 /*@
- * \fn void nbr_copy_init(mx_int_t *x, const mx_int_t *src)
+ * \fn void int_copy_init(mx_int_t *x, const mx_int_t *src)
  * \brief Performs copy-initialization of an integer.
  * \param the integer to initialize
  * \param integer to copy
  */
-void nbr_copy_init(mx_int_t *x, const mx_int_t *src)
+void int_copy_init(mx_int_t *x, const mx_int_t *src)
 {
   x->size = src->size;
   x->alloc = src->alloc;
@@ -51,12 +51,12 @@ void nbr_copy_init(mx_int_t *x, const mx_int_t *src)
 }
 
 /*@
- * \fn void nbr_limb_init(mx_int_t *x, const mx_limb_t value)
+ * \fn void int_limb_init(mx_int_t *x, const mx_limb_t value)
  * \brief Initializes an integer from a single limb.
  * \param the integer to initialize
  * \param the limb's value
  */
-void nbr_limb_init(mx_int_t *x, const mx_limb_t value)
+void int_limb_init(mx_int_t *x, const mx_limb_t value)
 {
   if (value == 0)
   {
@@ -74,7 +74,7 @@ void nbr_limb_init(mx_int_t *x, const mx_limb_t value)
 }
 
 /*@
- * \fn void nbr_raw_init(mx_int_t *x, mx_ssize_t size, mx_limb_t *limbs, mx_size_t alloc)
+ * \fn void int_raw_init(mx_int_t *x, mx_ssize_t size, mx_limb_t *limbs, mx_size_t alloc)
  * \brief Initializes an integer given all its internal data members.
  * \param the integer to initialize
  * \param the integer signed size
@@ -84,7 +84,7 @@ void nbr_limb_init(mx_int_t *x, const mx_limb_t value)
  * This function assumes that allocated limbs that are not part of the integer are 
  * set to zero, i.e. limbs[i] is zero for all i in [abs(size), alloc).
  */
-void nbr_raw_init(mx_int_t *x, mx_ssize_t size, mx_limb_t *limbs, mx_size_t alloc)
+void int_raw_init(mx_int_t *x, mx_ssize_t size, mx_limb_t *limbs, mx_size_t alloc)
 {
   x->alloc = alloc;
   x->size = size;
@@ -92,13 +92,13 @@ void nbr_raw_init(mx_int_t *x, mx_ssize_t size, mx_limb_t *limbs, mx_size_t allo
 }
 
 /*@
- * \fn void nbr_string_init(mx_int_t *x, const char *str)
+ * \fn void int_string_init(mx_int_t *x, const char *str)
  * \brief Initializes an integer from a string.
  * \param the integer to initialize
  * \param null-terminated char string
  *
  */
-void nbr_string_init(mx_int_t *x, const char *str)
+void int_string_init(mx_int_t *x, const char *str)
 {
 #if LIBMATHXCORE_LIMB_SIZE == 8
 #define DECIMAL_BASE 100
@@ -111,13 +111,13 @@ void nbr_string_init(mx_int_t *x, const char *str)
 #define DECIMAL_SHIFT 9
 #endif
 
-  nbr_init(x);
+  int_init(x);
 
   mx_int_t base;
-  nbr_limb_init(&base, DECIMAL_BASE);
+  int_limb_init(&base, DECIMAL_BASE);
 
   mx_int_t buffer;
-  nbr_init(&buffer);
+  int_init(&buffer);
 
   mx_ssize_t sign = 1;
   if (str[0] == '-')
@@ -141,25 +141,25 @@ void nbr_string_init(mx_int_t *x, const char *str)
       base.limbs[0] *= 10;
     }
 
-    nbr_mul(&buffer, x, &base);
-    nbr_swap(&buffer, x);
-    nbr_limb_abs_incr(x, limb);
+    int_mul(&buffer, x, &base);
+    int_swap(&buffer, x);
+    int_limb_abs_incr(x, limb);
   }
 
   x->size *= sign;
 
-  nbr_clear(&base);
-  nbr_clear(&buffer);
+  int_clear(&base);
+  int_clear(&buffer);
 
 #undef DECIMAL_BASE
 #undef DECIMAL_SHIFT
 }
 
 /*@
- * \fn void nbr_clear(mx_int_t *x)
+ * \fn void int_clear(mx_int_t *x)
  * \brief Releases any memory used by an arbitrary-precision integer.
  */
-void nbr_clear(mx_int_t *x)
+void int_clear(mx_int_t *x)
 {
   mx_free(x->limbs);
   x->size = 0;
@@ -167,10 +167,10 @@ void nbr_clear(mx_int_t *x)
 }
 
 /*@
- * \fn int nbr_is_normalized(mx_int_t *x)
+ * \fn int int_is_normalized(mx_int_t *x)
  * \brief Returns whether the input is in its normalized form.
  */
-int nbr_is_normalized(const mx_int_t *x)
+int int_is_normalized(const mx_int_t *x)
 {
   const mx_size_t s = abs(x->size);
   mx_size_t i = s;
@@ -188,10 +188,10 @@ int nbr_is_normalized(const mx_int_t *x)
 }
 
 /*@
- * \fn void nbr_normalize(mx_int_t *x)
+ * \fn void int_normalize(mx_int_t *x)
  * \brief Normalizes its input.
  */
-void nbr_normalize(mx_int_t *x)
+void int_normalize(mx_int_t *x)
 {
   mx_size_t s = abs(x->size);
   memset(x->limbs + s, 0, (x->alloc - s) * sizeof(mx_limb_t));
@@ -200,7 +200,7 @@ void nbr_normalize(mx_int_t *x)
 }
 
 /*@
- * \fn void nbr_ensure_alloc(mx_int_t *x, mx_size_t s)
+ * \fn void int_ensure_alloc(mx_int_t *x, mx_size_t s)
  * \brief Ensures enough limbs are allocated.
  * \param pointer to integer object
  * \param number of limbs that needs to be allocated
@@ -214,7 +214,7 @@ void nbr_normalize(mx_int_t *x)
  *
  * This function is mainly for internal purpose.
  */
-void nbr_ensure_alloc(mx_int_t *x, mx_size_t s)
+void int_ensure_alloc(mx_int_t *x, mx_size_t s)
 {
   if (x->alloc < s)
   {
@@ -232,7 +232,7 @@ void nbr_ensure_alloc(mx_int_t *x, mx_size_t s)
 }
 
 /*@
- * \fn void nbr_ensure_alloc_zero(mx_int_t *x, mx_size_t s)
+ * \fn void int_ensure_alloc_zero(mx_int_t *x, mx_size_t s)
  * \brief Ensures enough limbs are allocated and set to zero.
  * \param pointer to integer object
  * \param number of limbs that needs to be allocated
@@ -244,7 +244,7 @@ void nbr_ensure_alloc(mx_int_t *x, mx_size_t s)
  *
  * This function is mainly for internal purpose.
  */
-void nbr_ensure_alloc_zero(mx_int_t *x, mx_size_t s)
+void int_ensure_alloc_zero(mx_int_t *x, mx_size_t s)
 {
   if (x->alloc < s)
   {
@@ -259,12 +259,12 @@ void nbr_ensure_alloc_zero(mx_int_t *x, mx_size_t s)
 
 
 /*@
- * \fn void nbr_assign(mx_int_t *dest, const mx_int_t *src)
+ * \fn void int_assign(mx_int_t *dest, const mx_int_t *src)
  * \brief Performs integer assignment.
  * \param receiver
  * \param value to assign
  */
-void nbr_assign(mx_int_t *dest, const mx_int_t *src)
+void int_assign(mx_int_t *dest, const mx_int_t *src)
 {
   const mx_size_t srcsize = abs(src->size);
 
@@ -284,37 +284,37 @@ void nbr_assign(mx_int_t *dest, const mx_int_t *src)
 }
 
 /*@
- * \fn void nbr_assign_zero(mx_int_t *dest)
+ * \fn void int_assign_zero(mx_int_t *dest)
  * \brief Assigns the value 0 to an integer
  * \param receiver
  */
-void nbr_assign_zero(mx_int_t *dest)
+void int_assign_zero(mx_int_t *dest)
 {
   memset(dest->limbs, 0, abs(dest->size) * sizeof(mx_limb_t));
   dest->size = 0;
 }
 
-void nbr_limb_assign(mx_int_t *dest, const mx_limb_t limb)
+void int_limb_assign(mx_int_t *dest, const mx_limb_t limb)
 {
   if (limb == 0)
   {
-    nbr_assign_zero(dest);
+    int_assign_zero(dest);
   }
   else
   {
-    nbr_ensure_alloc(dest, 1);
+    int_ensure_alloc(dest, 1);
     dest->limbs[0] = limb;
     dest->size = 1;
   }
 }
 
 /*@
- * \fn void nbr_swap(mx_int_t *a, mx_int_t *b)
+ * \fn void int_swap(mx_int_t *a, mx_int_t *b)
  * \brief Swaps two integers
  * \param first value
  * \param second value
  */
-void nbr_swap(mx_int_t *a, mx_int_t *b)
+void int_swap(mx_int_t *a, mx_int_t *b)
 {
   const mx_int_t c = *b;
 
@@ -323,102 +323,102 @@ void nbr_swap(mx_int_t *a, mx_int_t *b)
 }
 
 /*@
- * \fn int nbr_sign(const mx_int_t *x)
+ * \fn int int_sign(const mx_int_t *x)
  * \brief Returns the sign of an integer.
  * \param input value
  * \returns -1, 0 or 1
  */
-int nbr_sign(const mx_int_t *x)
+int int_sign(const mx_int_t *x)
 {
   return x->size == 0 ? 0 : (x->size < 0 ? -1 : 1);
 }
 
 /*@
- * \fn void nbr_negate(mx_int_t *y, const mx_int_t *x)
+ * \fn void int_negate(mx_int_t *y, const mx_int_t *x)
  * \brief Computes the opposite of an integer
  * \param integer that will receive the result
  * \param input integer
  *
  * Informally, performs \c{y = -x}.
  */
-void nbr_negate(mx_int_t *y, const mx_int_t *x)
+void int_negate(mx_int_t *y, const mx_int_t *x)
 {
-  nbr_assign(y, x);
+  int_assign(y, x);
   y->size *= -1;
 }
 
 /*@
- * \fn void nbr_abs(mx_int_t *y, const mx_int_t *x)
+ * \fn void int_abs(mx_int_t *y, const mx_int_t *x)
  * \brief Computes the absolute value of an integer
  * \param integer that will receive the result
  * \param input integer
  *
  * Informally, performs \c{y = abs(x)}.
  */
-void nbr_abs(mx_int_t *y, const mx_int_t *x)
+void int_abs(mx_int_t *y, const mx_int_t *x)
 {
-  nbr_assign(y, x);
+  int_assign(y, x);
   y->size = abs(y->size);
 }
 
 /*@
- * \fn void nbr_rightshift(mx_int_t *result, const mx_int_t *x, mx_size_t n)
+ * \fn void int_rightshift(mx_int_t *result, const mx_int_t *x, mx_size_t n)
  * \brief Shifts an integer right.
  * \param variable to store the result
  * \param input integer
  * \param shift amount
  * 
  */
-void nbr_rightshift(mx_int_t *result, const mx_int_t *x, mx_size_t n)
+void int_rightshift(mx_int_t *result, const mx_int_t *x, mx_size_t n)
 {
   const mx_size_t limb_shift = n / sizeofbits(mx_limb_t);
 
   if (limb_shift >= (mx_size_t) abs(x->size))
   {
-    nbr_assign_zero(result);
+    int_assign_zero(result);
   }
   else
   {
     n -= limb_shift * sizeofbits(mx_limb_t);
-    nbr_ensure_alloc(result, abs(x->size) - limb_shift);
+    int_ensure_alloc(result, abs(x->size) - limb_shift);
     result->size = abs(x->size) - limb_shift;
     result->limbs[result->size - 1] = 0;
-    unbr_rshift(x->limbs + limb_shift, result->size, n, result->limbs);
+    uint_rshift(x->limbs + limb_shift, result->size, n, result->limbs);
     if (result->limbs[result->size - 1] == 0)
       result->size -= 1;
-    result->size *= nbr_sign(x);
+    result->size *= int_sign(x);
   }
 }
 
 /*@
- * \fn void nbr_rightshiftmx_int_t *x, mx_size_t n)
+ * \fn void int_rightshiftmx_int_t *x, mx_size_t n)
  * \brief Shifts an integer right.
  * \param integer to shift right
  * \param shift amount
  * 
  */
-void nbr_rightshift_assign(mx_int_t *x, mx_size_t n)
+void int_rightshift_assign(mx_int_t *x, mx_size_t n)
 {
   const mx_size_t limb_shift = n / sizeofbits(mx_limb_t);
 
   if (limb_shift >= (mx_size_t) abs(x->size))
   {
-    nbr_assign_zero(x);
+    int_assign_zero(x);
   }
   else
   {
     n -= limb_shift * sizeofbits(mx_limb_t);
     mx_size_t result_size = abs(x->size) - limb_shift;
-    unbr_rshift_overlap(x->limbs + limb_shift, result_size, n, x->limbs);
+    uint_rshift_overlap(x->limbs + limb_shift, result_size, n, x->limbs);
     if (x->limbs[result_size - 1] == 0)
       result_size -= 1;
     memset(x->limbs + result_size, 0, (abs(x->size) - result_size) * sizeof(mx_limb_t));
-    x->size *= result_size * nbr_sign(x);
+    x->size *= result_size * int_sign(x);
   }
 }
 
 /*@
- * \fn mx_size_t nbr_print(char *out, mx_size_t s, const mx_int_t *x)
+ * \fn mx_size_t int_print(char *out, mx_size_t s, const mx_int_t *x)
  * \brief Writes the decimal representation of an integer
  * \param pointer to output
  * \param size of the output buffer
@@ -429,7 +429,7 @@ void nbr_rightshift_assign(mx_int_t *x, mx_size_t n)
  * that will be written. If the buffer is smaller than this upper bound, 
  * no char are written and this function returns zero. 
  */
-mx_size_t nbr_print(char *out, mx_size_t s, const mx_int_t *x)
+mx_size_t int_print(char *out, mx_size_t s, const mx_int_t *x)
 {
   if (s < 2)
     return 0;
@@ -442,7 +442,7 @@ mx_size_t nbr_print(char *out, mx_size_t s, const mx_int_t *x)
   }
 
   // upper_bound = sign + #digits + null-terminator
-  const mx_size_t upper_bound = (x->size < 0 ? 1 : 0) + unbr_print_size(x->limbs, abs(x->size)) + 1;
+  const mx_size_t upper_bound = (x->size < 0 ? 1 : 0) + uint_print_size(x->limbs, abs(x->size)) + 1;
   if (s < upper_bound)
     return 0;
   
@@ -454,7 +454,7 @@ mx_size_t nbr_print(char *out, mx_size_t s, const mx_int_t *x)
     written += 1;
   }
 
-  written += unbr_print(x->limbs, abs(x->size), out);
+  written += uint_print(x->limbs, abs(x->size), out);
 
   return written;
 }

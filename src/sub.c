@@ -11,7 +11,7 @@
 #include <string.h>
 
 /*@
- * \fn void nbr_sub(mx_int_t *difference, const mx_int_t *minuend, const mx_int_t *subtrahend)
+ * \fn void int_sub(mx_int_t *difference, const mx_int_t *minuend, const mx_int_t *subtrahend)
  * \brief Subtracts two integers.
  * \param variable that will receive the difference
  * \param the minuend
@@ -19,20 +19,20 @@
  *
  * Performs \c{difference = minuend - subtrahend}.
  */
-void nbr_sub(mx_int_t *difference, const mx_int_t *minuend, const mx_int_t *subtrahend)
+void int_sub(mx_int_t *difference, const mx_int_t *minuend, const mx_int_t *subtrahend)
 {
   if (subtrahend->size == 0)
   {
-    nbr_assign(difference, minuend);
+    int_assign(difference, minuend);
   }
   else if (minuend->size == 0)
   {
-    nbr_assign(difference, subtrahend);
+    int_assign(difference, subtrahend);
     difference->size *= -1;
   }
   else
   {
-    if (nbr_sign(minuend) != nbr_sign(subtrahend))
+    if (int_sign(minuend) != int_sign(subtrahend))
     {
       mx_size_t result_size = abs(minuend->size) + abs(subtrahend->size) + 1;
       if (difference->alloc < result_size)
@@ -40,16 +40,16 @@ void nbr_sub(mx_int_t *difference, const mx_int_t *minuend, const mx_int_t *subt
         mx_free(difference->limbs);
         difference->limbs = mx_malloc(result_size, &(difference->alloc));
       }
-      difference->size = unbr_add(minuend->limbs, abs(minuend->size), subtrahend->limbs, abs(subtrahend->size), difference->limbs);
+      difference->size = uint_add(minuend->limbs, abs(minuend->size), subtrahend->limbs, abs(subtrahend->size), difference->limbs);
       memset(difference->limbs + difference->size, 0, (difference->alloc - difference->size) * sizeof(mx_limb_t));
-      difference->size *= nbr_sign(minuend);
+      difference->size *= int_sign(minuend);
     }
     else
     {
-      const int abscomp = unbr_comp(minuend->limbs, abs(minuend->size), subtrahend->limbs, abs(subtrahend->size));
+      const int abscomp = uint_comp(minuend->limbs, abs(minuend->size), subtrahend->limbs, abs(subtrahend->size));
       if (abscomp == 0)
       {
-        nbr_assign_zero(difference);
+        int_assign_zero(difference);
       }
       else
       {
@@ -71,16 +71,16 @@ void nbr_sub(mx_int_t *difference, const mx_int_t *minuend, const mx_int_t *subt
           difference->limbs = mx_malloc(abs(large->size), &(difference->alloc));
         }
 
-        difference->size = unbr_sub(large->limbs, abs(large->size), small->limbs, abs(small->size), difference->limbs);
+        difference->size = uint_sub(large->limbs, abs(large->size), small->limbs, abs(small->size), difference->limbs);
         memset(difference->limbs + difference->size, 0, (difference->alloc - difference->size) * sizeof(mx_limb_t));
-        difference->size *= abscomp * nbr_sign(minuend);
+        difference->size *= abscomp * int_sign(minuend);
       }
     }
   }
 }
 
 /*@
- * \fn void nbr_limb_abs_decr(mx_int_t *x, mx_limb_t y)
+ * \fn void int_limb_abs_decr(mx_int_t *x, mx_limb_t y)
  * \brief Decrements the absolute value of an integer.
  * \param variable to decrement
  * \param value to subtract
@@ -89,9 +89,9 @@ void nbr_sub(mx_int_t *difference, const mx_int_t *minuend, const mx_int_t *subt
  * subtracts \c y from it.
  * This function assumes that \c{abs(x) >= y}. 
  */
-void nbr_limb_abs_decr(mx_int_t *x, mx_limb_t y)
+void int_limb_abs_decr(mx_int_t *x, mx_limb_t y)
 {
-  mx_limb_t borrow = unbr_limb_decr(x->limbs, abs(x->size), y);
+  mx_limb_t borrow = uint_limb_decr(x->limbs, abs(x->size), y);
   assert(borrow == 0);
 
   if (x->limbs[abs(x->size) - 1] == 0)

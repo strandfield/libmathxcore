@@ -36,7 +36,7 @@ mx_size_t mx_print_helper_size_upper_bound(const mx_size_t n)
 }
 
 /*@
- * \fn mx_size_t unbr_print(const mx_limb_t *a, const mx_size_t as, char *output)
+ * \fn mx_size_t uint_print(const mx_limb_t *a, const mx_size_t as, char *output)
  * \brief Prints an unsigned integer.
  * \param pointer to the least-signficant limb of the integer
  * \param size of the integer
@@ -45,7 +45,7 @@ mx_size_t mx_print_helper_size_upper_bound(const mx_size_t n)
  *
  * The function assumes that there is enough space in \c output to write the result.
  */
-mx_size_t unbr_print(const mx_limb_t *a, const mx_size_t as, char *output)
+mx_size_t uint_print(const mx_limb_t *a, const mx_size_t as, char *output)
 {
   mx_size_t size, i, j;
   mx_limb_t rem;
@@ -119,14 +119,14 @@ mx_size_t unbr_print(const mx_limb_t *a, const mx_size_t as, char *output)
 }
 
 /*@
- * \fn mx_size_t unbr_print_size(const mx_limb_t *a, const mx_size_t as)
+ * \fn mx_size_t uint_print_size(const mx_limb_t *a, const mx_size_t as)
  * \brief Returns an estimate of the number of characters in the string representation of an integer.
  * \param pointer to the least-signficant limb of the integer
  * \param size of the integer
  * \returns an upper bound of the number of char required to display the integer
  *
  */
-mx_size_t unbr_print_size(const mx_limb_t *a, const mx_size_t as)
+mx_size_t uint_print_size(const mx_limb_t *a, const mx_size_t as)
 {
   return mx_print_helper_size_upper_bound(as) * DECIMAL_SHIFT;
 }

@@ -5,15 +5,15 @@
 
 
 /*@
- * \fn mx_size_t unbr_long_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
+ * \fn mx_size_t uint_long_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
  * \brief Multiplies two unsigned integers using long-multiplication.
  *
- * This function is used as an implementation for \m unbr_mul.
+ * This function is used as an implementation for \m uint_mul.
  */
 
 #if defined(LIBMATHXCORE_HAS_LONGLIMB_TYPE)
 
-mx_size_t unbr_long_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
+mx_size_t uint_long_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
 {
   mx_size_t i;
   mx_longlimb_t limb_mul;
@@ -61,7 +61,7 @@ mx_size_t unbr_long_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx
 
 
 /*@
- * \fn mx_size_t unbr_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
+ * \fn mx_size_t uint_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
  * \brief Multiplies two unsigned integers.
  * \param pointer to the least-signficant limb of the first integer
  * \param size of the first integer
@@ -73,7 +73,7 @@ mx_size_t unbr_long_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx
  * This function assumes that there is enough space to write the result in \c{result} and that
  * it is zero-initialized.
  */
-mx_size_t unbr_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
+mx_size_t uint_mul(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
 {
-  return unbr_long_mul(a, as, b, bs, result);
+  return uint_long_mul(a, as, b, bs, result);
 }

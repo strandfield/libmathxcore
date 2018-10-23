@@ -2,7 +2,7 @@
 #include "mathx/core/ucomp.h"
 
 /*@
- * \fn mx_ssize_t unbr_comp(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs)
+ * \fn mx_ssize_t uint_comp(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs)
  * \brief Compares two unsigned integers.
  * \param pointer to the least-signficant limb of the first integer
  * \param size of the first integer
@@ -13,7 +13,7 @@
  * Returns the sign of the difference of the two unsigned integers (informaly \c{a-b}),
  * with the convention that the sign of zero is zero.
  */
-mx_ssize_t unbr_comp(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs)
+mx_ssize_t uint_comp(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs)
 {
   mx_ssize_t comp = (as < bs) ? -1 : (as > bs);
   if (comp != 0 || (as == 0 && bs == 0))

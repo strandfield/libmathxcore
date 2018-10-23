@@ -2,7 +2,7 @@
 #include "mathx/core/uadd.h"
 
 /*@
- * \fn mx_size_t unbr_add(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
+ * \fn mx_size_t uint_add(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
  * \brief Adds two unsigned integers.
  * \param pointer to the least-signficant limb of the first integer
  * \param size of the first integer
@@ -15,13 +15,13 @@
  * Note that it is the caller's responsability to ensure that enough space is available 
  * to write the result.
  */
-mx_size_t unbr_add(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
+mx_size_t uint_add(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size_t bs, mx_limb_t *result)
 {
   mx_limb_t carry = 0;
   mx_size_t i = 0;
 
   if (as < bs)
-    return unbr_add(b, bs, a, as, result);
+    return uint_add(b, bs, a, as, result);
 
   for (; i < bs; ++i)
   {
@@ -49,14 +49,14 @@ mx_size_t unbr_add(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_size
 
 
 /*@
- * \fn mx_limb_t unbr_limb_incr(const mx_limb_t *a, mx_size_t as, mx_limb_t b)
+ * \fn mx_limb_t uint_limb_incr(const mx_limb_t *a, mx_size_t as, mx_limb_t b)
  * \brief Increments an unsigned integer by a limb and returns the final carry.
  * \param pointer to the least-signficant limb of the integer
  * \param limb to be added
  * \returns the carry that should be written in a[as]
  *
  */
-mx_limb_t unbr_limb_incr(mx_limb_t *a, mx_size_t as, mx_limb_t b)
+mx_limb_t uint_limb_incr(mx_limb_t *a, mx_size_t as, mx_limb_t b)
 {
   mx_limb_t carry;
   mx_size_t i;

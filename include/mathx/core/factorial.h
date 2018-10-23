@@ -4,6 +4,6 @@
 
 #include "mathx/core/integer.h"
 
-LIBMATHXCORE_API void nbr_factorial(mx_int_t *fn, const mx_int_t *n);
+LIBMATHXCORE_API void int_factorial(mx_int_t *fn, const mx_int_t *n);
 
 #endif // LIBMATHXCORE_FACTORIAL_H
