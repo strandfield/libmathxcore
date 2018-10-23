@@ -4,6 +4,10 @@
 
 #include "mathx/core/defs.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct LIBMATHXCORE_API mx_integer_struct
 {
   mx_ssize_t size;
@@ -42,6 +46,10 @@ LIBMATHXCORE_API void int_rightshift(mx_int_t *result, const mx_int_t *x, mx_siz
 LIBMATHXCORE_API void int_rightshift_assign(mx_int_t *x, mx_size_t n);
 
 LIBMATHXCORE_API mx_size_t int_print(char *out, mx_size_t s, const mx_int_t *x);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #include "mathx/core/add.h"
 #include "mathx/core/comp.h"

@@ -4,6 +4,14 @@
 
 #include "mathx/core/integer.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 LIBMATHXCORE_API void int_gcd_bezout(mx_int_t *gcd, const mx_int_t *a, const mx_int_t *b, mx_int_t *u, mx_int_t *v);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif // LIBMATHXCORE_BEZOUT_H
