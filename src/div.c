@@ -82,3 +82,22 @@ void int_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, 
     int_clear(&temp);
   }
 }
+
+/*@
+ * \fn void int_mod(mx_int_t *mod, const mx_int_t *dividend, const mx_int_t *divisor)
+ * \brief Computes the modulo, or remainder, in euclidean division.
+ * \param variable that will receive the remainder
+ * \param dividend
+ * \param divisor
+ *
+ * Note that the remainder is always non-negative, i.e. \c{0 <= remainder < abs(divisor)}.
+ */
+void int_mod(mx_int_t *mod, const mx_int_t *dividend, const mx_int_t *divisor)
+{
+  mx_int_t quo;
+  int_init(&quo);
+
+  int_div(&quo, mod, dividend, divisor);
+
+  int_clear(&quo);
+}

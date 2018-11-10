@@ -795,7 +795,24 @@ Test(integer_functions, pow)
   Assert(eq(&c, "4294967296"));
 }
 
-TestSuite(integer_functions, sign, factorial, gcd, bezout, isqrt, pow);
+Test(integer_functions, modpow)
+{
+  mx_int_t a;
+  mx_int_t b;
+  mx_int_t c;
+  mx_int_t d;
+
+  int_limb_init(&a, 2);
+  int_limb_init(&b, 32);
+  int_limb_init(&c, 3);
+  int_init(&d);
+
+  // 2^32 % 3 == 1
+  int_modpow(&d, &a, &b, &c);
+  Assert(eq(&d, "1"));
+}
+
+TestSuite(integer_functions, sign, factorial, gcd, bezout, isqrt, pow, modpow);
 
 
 int main(int argc, char *argv[])
