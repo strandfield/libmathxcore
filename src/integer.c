@@ -334,6 +334,41 @@ int int_sign(const mx_int_t *x)
 }
 
 /*@
+ * \fn int int_is_zero(const mx_int_t *x)
+ * \brief Returns whether the input is zero
+ * \param input value
+ * \returns 0 or 1
+ */
+int int_is_zero(const mx_int_t *x)
+{
+  return x->size == 0;
+}
+
+/*@
+ * \fn int int_is_odd(const mx_int_t *x)
+ * \brief Returns whether the input is an odd integer
+ * \param input value
+ * \returns 0 or 1
+ */
+int int_is_odd(const mx_int_t *x)
+{
+  if (x->size == 0)
+    return 0;
+  return (x->limbs[0] & 1);
+}
+
+/*@
+ * \fn int int_is_even(const mx_int_t *x)
+ * \brief Returns whether the input is an even integer
+ * \param input value
+ * \returns 0 or 1
+ */
+int int_is_even(const mx_int_t *x)
+{
+  return (x->size == 0) || ((x->limbs[0] & 1) == 0);
+}
+
+/*@
  * \fn void int_negate(mx_int_t *y, const mx_int_t *x)
  * \brief Computes the opposite of an integer
  * \param integer that will receive the result

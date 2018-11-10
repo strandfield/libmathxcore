@@ -39,6 +39,9 @@ LIBMATHXCORE_API void int_limb_assign(mx_int_t *dest, const mx_limb_t limb);
 void LIBMATHXCORE_API int_swap(mx_int_t *a, mx_int_t *b);
 
 LIBMATHXCORE_API int int_sign(const mx_int_t *x);
+LIBMATHXCORE_API int int_is_zero(const mx_int_t *x);
+LIBMATHXCORE_API int int_is_odd(const mx_int_t *x);
+LIBMATHXCORE_API int int_is_even(const mx_int_t *x);
 LIBMATHXCORE_API void int_negate(mx_int_t *y, const mx_int_t *x);
 LIBMATHXCORE_API void int_abs(mx_int_t *y, const mx_int_t *x);
 
@@ -54,6 +57,7 @@ LIBMATHXCORE_API mx_size_t int_print(char *out, mx_size_t s, const mx_int_t *x);
 #include "mathx/core/add.h"
 #include "mathx/core/comp.h"
 #include "mathx/core/div.h"
+#include "mathx/core/pow.h"
 #include "mathx/core/mul.h"
 #include "mathx/core/sub.h"
 

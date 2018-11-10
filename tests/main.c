@@ -596,6 +596,36 @@ Test(integer_utils, from_string)
 TestSuite(integer_utils, to_string, from_string);
 
 
+
+int eq(const mx_int_t *x, const char *str)
+{
+  const mx_size_t buffer_size = 1024;
+  char buffer[1024] = { 0 };
+  int_print(buffer, buffer_size, x);
+  return strcmp(buffer, str) == 0;
+}
+
+Test(integer_functions, sign)
+{
+  mx_int_t a;
+  mx_int_t b;
+  mx_int_t c;
+
+  int_limb_init(&a, 42);
+  int_limb_init(&b, 65);
+  int_init(&c);
+
+  Assert(int_is_odd(&a) == 0);
+  Assert(int_is_even(&a) == 1);
+  Assert(int_is_odd(&b) == 1);
+  Assert(int_is_even(&b) == 0);
+
+  int_negate(&c, &a);
+  Assert(int_sign(&c) == -1);
+  int_abs(&b, &c);
+  Assert(int_comp(&b, &a) == 0);
+}
+
 #include "mathx/core/factorial.h"
 
 Test(integer_functions, factorial)
@@ -690,14 +720,6 @@ Test(integer_functions, gcd)
 
 #include "mathx/core/bezout.h"
 
-int eq(const mx_int_t *x, const char *str)
-{
-  const mx_size_t buffer_size = 1024;
-  char buffer[1024] = { 0 };
-  int_print(buffer, buffer_size, x);
-  return strcmp(buffer, str) == 0;
-}
-
 Test(integer_functions, bezout)
 {
   mx_int_t a;
@@ -758,7 +780,22 @@ Test(integer_functions, isqrt)
   Assert(eq(&b, "12"));
 }
 
-TestSuite(integer_functions, factorial, gcd, bezout, isqrt);
+Test(integer_functions, pow)
+{
+  mx_int_t a;
+  mx_int_t b;
+  mx_int_t c;
+
+  int_limb_init(&a, 2);
+  int_limb_init(&b, 32);
+  int_init(&c);
+
+  // 2^32
+  int_pow(&c, &a, &b);
+  Assert(eq(&c, "4294967296"));
+}
+
+TestSuite(integer_functions, sign, factorial, gcd, bezout, isqrt, pow);
 
 
 int main(int argc, char *argv[])
