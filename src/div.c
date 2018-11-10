@@ -4,6 +4,7 @@
 #include "mathx/core/memory.h"
 #include "mathx/core/udiv.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,15 +16,12 @@
  * \param dividend
  * \param divisor
  *
- * Note that the remainder is always non-negative, i.e. \c{0 <= remainder < abs(divisor)}.
+ * Note that the remainder is always non-negative, i.e. \c{0 <= remainder < abs(divisor)}
+ * and that this function assumes the divisor is non-zero.
  */
 void int_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, const mx_int_t *divisor)
 {
-  if (divisor->size == 0)
-  {
-    /// TODO: find a way to raise an error
-    return;
-  }
+  assert(divisor->size != 0);
 
   if (abs(divisor->size) == 1)
   {
