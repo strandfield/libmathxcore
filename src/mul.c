@@ -24,16 +24,7 @@ void int_mul(mx_int_t *product, const mx_int_t *factor1, const mx_int_t *factor2
   }
   else
   {
-    mx_size_t result_size = abs(factor1->size) + abs(factor2->size);
-    if (product->alloc < result_size)
-    {
-      mx_free(product->limbs);
-      product->limbs = mx_malloc_zero(result_size, &(product->alloc));
-    }
-    else
-    {
-      memset(product->limbs, 0, abs(product->size) * sizeof(mx_limb_t));
-    }
+    int_ensure_alloc_zero(product, abs(factor1->size) + abs(factor2->size));
     product->size = uint_mul(factor1->limbs, abs(factor1->size), factor2->limbs, abs(factor2->size), product->limbs);
     product->size *= int_sign(factor1) * int_sign(factor2);
   }

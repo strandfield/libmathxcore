@@ -88,7 +88,7 @@ mx_limb_t uint_limb_decr(mx_limb_t *a, mx_size_t as, mx_limb_t b)
     return b;
   }
 
-  borrow = a[0] < (a[0] - b);
+  borrow = b > a[0];
   a[0] = a[0] - b;
 
   for (i = 1; borrow && i < as; ++i)
