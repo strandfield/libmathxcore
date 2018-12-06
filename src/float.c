@@ -4,6 +4,7 @@
 #include "mathx/core/memory.h"
 #include "mathx/core/ucomp.h"
 #include "mathx/core/print.h"
+#include "mathx/core/shift.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -246,7 +247,10 @@ void float_assign_zero(mx_float_t *dest)
 void float_assign_limb(mx_float_t *dest, mx_limb_t val)
 {
   if (val == 0)
-    return float_assign_zero(dest);
+  {
+    float_assign_zero(dest);
+    return;
+  }
 
   float_ensure_alloc(dest, 1);
   dest->limbs[0] = val;
@@ -267,6 +271,65 @@ void float_neg(mx_float_t *dest, const mx_float_t *src)
   dest->size *= -1;
 }
 
+/*@
+ * \fn void float_avg(mx_float_t *result, const mx_float_t *a, const mx_float_t *b)
+ * \param output variable
+ * \param first input
+ * \param second input
+ * \brief Computes the mean of two floating point numbers
+ * 
+ */
+void float_avg(mx_float_t *result, const mx_float_t *a, const mx_float_t *b)
+{
+  float_add(result, a, b);
+  uint_rshift_overlap(result->limbs, abs(result->size), 1, result->limbs);
+  if (result->limbs[abs(result->size) - 1] == 0)
+    result->size -= (result->size >= 0 ? 1 : -1);
+}
+
+/*@
+ * \fn void float_lshift_assign(mx_float_t *x, mx_size_t n)
+ * \param in/out variable
+ * \param shift amount
+ * \brief Shifts the limbs of a floating point number left.
+ * 
+ */
+void float_lshift_assign(mx_float_t *x, mx_size_t n)
+{
+  if (x->size == 0)
+    return;
+
+  const mx_size_t xsize = abs(x->size);
+
+  const mx_size_t limb_shift = n / sizeofbits(mx_limb_t);
+  n -= limb_shift * sizeofbits(mx_limb_t);
+  const int highlimb_overflow = (x->limbs[xsize - 1] >> (sizeofbits(mx_limb_t) - n)) != 0;
+
+  const mx_size_t required_size = xsize + limb_shift + highlimb_overflow;
+
+  if (x->alloc >= required_size)
+  {
+    mx_limb_t shifted_out = uint_lshift_overlap(x->limbs, xsize, n, x->limbs + limb_shift);
+    assert(shifted_out == 0 || highlimb_overflow);
+    memset(x->limbs, 0, limb_shift * sizeof(mx_limb_t));
+    if (highlimb_overflow)
+      x->limbs[required_size - 1] = shifted_out;
+    x->size = required_size * (x->size < 0 ? -1 : 1);
+  }
+  else
+  {
+    mx_limb_t *newlimbs = mx_malloc(required_size, &(x->alloc));
+    memset(newlimbs + required_size, 0, (x->alloc - required_size) * sizeof(mx_limb_t));
+    memset(newlimbs, 0, limb_shift * sizeof(mx_limb_t));
+    mx_limb_t shifted_out = uint_lshift(x->limbs, xsize, n, newlimbs + limb_shift);
+    assert(shifted_out == 0 || highlimb_overflow);
+    if(highlimb_overflow)
+      newlimbs[required_size - 1] = shifted_out;
+    mx_free(x->limbs);
+    x->limbs = newlimbs;
+    x->size = required_size * (x->size < 0 ? -1 : 1);
+  }
+}
 
 /*@
  * \fn void float_swap(mx_float_t *a, mx_float_t *b)
@@ -325,8 +388,8 @@ int float_comp(const mx_float_t *a, const mx_float_t *b)
 
   assert(float_sign(a) == float_sign(b) && float_sign(a) != 0);
 
-  const mx_size_t abs_asize = abs(a->size);
-  const mx_size_t abs_bsize = abs(b->size);
+  const int abs_asize = abs(a->size);
+  const int abs_bsize = abs(b->size);
 
   if (abs_asize + a->exp > abs_bsize + b->exp)
     return float_sign(a) * 1;

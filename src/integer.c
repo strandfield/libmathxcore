@@ -448,7 +448,7 @@ void int_rightshift_assign(mx_int_t *x, mx_size_t n)
     if (x->limbs[result_size - 1] == 0)
       result_size -= 1;
     memset(x->limbs + result_size, 0, (abs(x->size) - result_size) * sizeof(mx_limb_t));
-    x->size *= result_size * int_sign(x);
+    x->size = result_size * int_sign(x);
   }
 }
 

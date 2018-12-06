@@ -817,6 +817,7 @@ TestSuite(integer_functions, sign, factorial, gcd, bezout, isqrt, pow, modpow);
 
 extern void register_rationals_test_suite();
 extern void register_floats_test_suite();
+extern void register_floats_functions_test_suite();
 
 int main(int argc, char *argv[])
 {
@@ -832,6 +833,7 @@ int main(int argc, char *argv[])
 
   register_rationals_test_suite();
   register_floats_test_suite();
+  register_floats_functions_test_suite();
 
   run_all_tests();
 

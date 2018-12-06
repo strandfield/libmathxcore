@@ -124,7 +124,7 @@ void uint_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
     // We may rarely overestimate by 1.
     const mx_limb_t utop = uk[size_v];
     assert(utop <= vm1);
-    const mx_limb_t uu = ((mx_longlimb_t)utop << sizeofbits(mx_limb_t)) | uk[size_v - 1];
+    const mx_longlimb_t uu = ((mx_longlimb_t)utop << sizeofbits(mx_limb_t)) | uk[size_v - 1];
     q_tilde = (uu / vm1);
     mx_longlimb_t r = (uu - vm1 * q_tilde); /* r = uu % vm1 */
     while (vm2 * q_tilde > ((r << sizeofbits(mx_limb_t)) | uk[size_v - 2]))

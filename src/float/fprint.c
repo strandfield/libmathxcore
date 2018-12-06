@@ -49,10 +49,45 @@ mx_float_t get_pow_ten(unsigned int n, mx_size_t prec)
  */
 mx_size_t float_print(char *out, mx_size_t s, const mx_float_t *x)
 {
+  mx_int_t digits;
+  int_init(&digits);
+
+  const int n = float_dec_digits(&digits, x);
+
+  const mx_size_t size_estimate = uint_print_size(digits.limbs, abs(digits.size)) + 1 + 1 + 9;
+  if (s < size_estimate)
+  {
+    int_clear(&digits);
+    return 0;
+  }
+
+  mx_size_t written = 0;
+
+  if (digits.size < 0)
+  {
+    out[written] = '-';
+    ++written;
+    digits.size *= -1;
+  }
+
+  written += uint_print(digits.limbs, digits.size, out + written);
+
+  if (n != 0)
+  {
+    out[written] = 'e';
+    written++;
+    written += sprintf(out + written, "%d", n);
+  }
+
+  return written;
+}
+
+mx_exp_t float_dec_digits(mx_int_t *digits_out, const mx_float_t *x)
+{
   if (x->exp < 0)
   {
     const int k = -1 * x->exp * sizeofbits(mx_limb_t);
-    
+
     // We rewrite
     //     x = aaaaa * 2^-k
     // as
@@ -65,67 +100,44 @@ mx_size_t float_print(char *out, mx_size_t s, const mx_float_t *x)
     //     x = aaaaa * (2^-k * 10^floor(n)) * 10^-floor(n)
     // with (2^-k * 10^floor(n)) almost 1
 
-    int n = (int) floor(k * log(2) / log(10));
+    int n = (int)floor(k * log(2) / log(10));
 
-    mx_float_t ten;
-    float_init(&ten);
-    float_assign_limb(&ten, 10);
-
-    mx_float_t tenN;
-    float_init_prec(&tenN, 2 * x->prec);
-    float_pow_uint(&tenN, &ten, (unsigned int)n);
+    mx_float_t ten_pow_n = get_pow_ten((unsigned int)n, x->prec);
 
     mx_float_t digits;
     float_init_prec(&digits, 2 * x->prec);
 
-    mx_float_t u = *x;
-    u.exp = 0;
+    float_mul(&digits, x, &ten_pow_n);
 
-    mx_float_t mul = tenN;
-    //mul.limbs += (k / sizeofbits(mx_limb_t)); // dividing by 2^k
-    //mul.size -= (k / sizeofbits(mx_limb_t));
+    float_clear(&ten_pow_n);
 
-    float_mul(&digits, &u, &mul);
+    const int sign = digits.size < 0 ? -1 : 1;
+    digits.size = abs(digits.size);
 
-    digits.exp += (k / sizeofbits(mx_limb_t));
-
-    // We should have digits.exp almost equal to k
-    memmove(digits.limbs, digits.limbs + digits.exp, (digits.size - digits.exp) * sizeof(mx_limb_t));
-    digits.size -= digits.exp;
-    digits.exp = 0;
-
-    const mx_size_t size_estimate = uint_print_size(digits.limbs, abs(digits.size)) + 1 + 1 + 9;
-    if (s < size_estimate)
+    // We should have digits.exp almost 0
+    if (digits.exp < 0)
     {
-      float_clear(&ten);
-      float_clear(&tenN);
-      float_clear(&digits);
-      return 0;
+      const int absexp = -digits.exp;
+      memmove(digits.limbs, digits.limbs + absexp, (digits.size - absexp) * sizeof(mx_limb_t));
+      memset(digits.limbs + digits.size - absexp, 0, absexp * sizeof(mx_limb_t));
+      digits.size -= absexp;
+    }
+    else if (digits.exp > 0)
+    {
+      // We need to pad digits with zeros (bad)
+      float_lshift_assign(&digits, sizeofbits(mx_limb_t) * digits.exp);
     }
 
-    mx_size_t written = 0;
+    mx_free(digits_out->limbs);
+    digits_out->limbs = digits.limbs;
+    digits_out->size = digits.size * sign;
+    digits_out->alloc = digits.alloc;
 
-    if (digits.size < 0)
-    {
-      out[written] = '-';
-      ++written;
-      digits.size *= -1;
-    }
-
-    written += uint_print(digits.limbs, abs(digits.size), out + written);
-    out[written] = 'e';
-    written++;
-    written += sprintf(out + written, "%d", -n);
-
-    float_clear(&ten);
-    float_clear(&tenN);
-    float_clear(&digits);
-
-    return written;
+    return -n;
   }
   else if (x->exp > 0)
   {
-    // We rewrite
+    // Same principle, we rewrite
     //     x = aaaaa * 2^k
     // as
     //     x = (aaaaa * 2^k / 10^n) * 10^n
@@ -133,7 +145,7 @@ mx_size_t float_print(char *out, mx_size_t s, const mx_float_t *x)
     //     n = floor(k * ln(2) / ln(10))
 
     const int k = x->exp * sizeofbits(mx_limb_t);
-    int n = (int) floor(k * log(2) / log(10));
+    int n = (int)floor(k * log(2) / log(10));
 
     assert(n >= 0);
 
@@ -146,84 +158,44 @@ mx_size_t float_print(char *out, mx_size_t s, const mx_float_t *x)
 
     float_clear(&ten_pow_n);
 
-    mx_size_t written = 0;
-    if (digits.size < 0)
-    {
-      out[written] = '-';
-      ++written;
-      digits.size *= -1;
-    }
+    const int sign = digits.size < 0 ? -1 : 1;
+    digits.size = abs(digits.size);
 
+    // digits.exp should be almost zero
     if (digits.exp > 0)
     {
-      if (digits.alloc >= digits.size + digits.exp)
-      {
-        memmove(digits.limbs + digits.exp, digits.limbs, digits.size);
-      }
-      else
-      {
-        mx_limb_t *limbs = mx_malloc(digits.size + digits.exp, &digits.alloc);
-        memcpy(limbs + digits.exp, digits.limbs, sizeof(mx_limb_t) * digits.size);
-        mx_free(digits.limbs);
-        digits.limbs = limbs;
-      }
-
-      memset(digits.limbs, 0, digits.exp * sizeof(mx_limb_t));
-      digits.size += digits.exp;
-      digits.exp = 0;
-
-      const mx_size_t size_estimate = uint_print_size(digits.limbs, digits.size) + 1 + 1 + 9;
-      if (s < size_estimate)
-      {
-        float_clear(&digits);
-        return 0;
-      }
-
-      written += uint_print(digits.limbs, digits.size, out);
+      // We need to pad with zeros (bad)
+      float_lshift_assign(&digits, digits.exp * sizeofbits(mx_limb_t));
     }
     else if (digits.exp <= 0)
     {
-      mx_float_t print_digits = digits;
-      print_digits.limbs += -digits.exp;
-      print_digits.size += digits.exp;
-
-      const mx_size_t size_estimate = uint_print_size(print_digits.limbs, print_digits.size) + 1 + 1 + 9;
-      if (s < size_estimate)
-      {
-        float_clear(&digits);
-        return 0;
-      }
-
-      written += uint_print(print_digits.limbs, print_digits.size, out);
+      const int absexp = -digits.exp;
+      assert(absexp <= digits.size);
+      memmove(digits.limbs, digits.limbs + absexp, (digits.size - absexp) * sizeof(mx_limb_t));
+      memset(digits.limbs + digits.size - absexp, 0, absexp * sizeof(mx_limb_t));
+      digits.size -= absexp;
     }
 
     float_clear(&digits);
 
-    out[written] = 'e';
-    written++;
-    written += sprintf(out + written, "%d", n);
+    mx_free(digits_out->limbs);
+    digits_out->limbs = digits.limbs;
+    digits_out->size = digits.size * sign;
+    digits_out->alloc = digits.alloc;
 
-    return written;
+    return n;
   }
   else
   {
     assert(x->exp == 0);
 
-    mx_float_t digits = *x;
+    mx_int_t digits;
+    digits.size = x->size;
+    digits.alloc = x->alloc;
+    digits.limbs = x->limbs;
 
-    const mx_size_t size_estimate = uint_print_size(digits.limbs, abs(digits.size)) + 1 + 1 + 9;
-    if (s < size_estimate)
-      return 0;
+    int_assign(digits_out, &digits);
 
-    mx_size_t written = 0;
-    if (digits.size < 0)
-    {
-      out[written] = '-';
-      ++written;
-      digits.size *= -1;
-    }
-    written += uint_print(digits.limbs, digits.size, out);
-
-    return written;
+    return 0;
   }
 }

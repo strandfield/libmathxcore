@@ -1,5 +1,6 @@
 
 #include "test-framework.h"
+#include "test-framework-float.h"
 
 #include "mathx/core/float.h"
 #include "mathx/core/integer.h"
@@ -7,14 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 
-
-void printf_float(mx_float_t *x)
-{
-  const mx_size_t buffer_size = 1024;
-  char buffer[1024] = { 0 };
-  float_raw_print(buffer, buffer_size, x);
-  printf("%s\n", buffer);
-}
 
 mx_float_t new_float(const char *str, mx_exp_t exp)
 {
@@ -24,42 +17,6 @@ mx_float_t new_float(const char *str, mx_exp_t exp)
   mx_float_t ret;
   float_raw_init(&ret, a.size, a.limbs, a.alloc, exp, float_default_prec());
   return ret;
-}
-
-void set_limbs_value_2(mx_limb_t *limbs, mx_limb_t a, mx_limb_t b)
-{
-  limbs[0] = a;
-  limbs[1] = b;
-}
-
-void set_limbs_value_3(mx_limb_t *limbs, mx_limb_t a, mx_limb_t b, mx_limb_t c)
-{
-  set_limbs_value_2(limbs, a, b);
-  limbs[2] = c;
-}
-
-void set_limbs_value_4(mx_limb_t *limbs, mx_limb_t a, mx_limb_t b, mx_limb_t c, mx_limb_t d)
-{
-  set_limbs_value_3(limbs, a, b, c);
-  limbs[3] = d;
-}
-
-void set_limbs_value_5(mx_limb_t *limbs, mx_limb_t a, mx_limb_t b, mx_limb_t c, mx_limb_t d, mx_limb_t e)
-{
-  set_limbs_value_4(limbs, a, b, c, d);
-  limbs[4] = e;
-}
-
-void set_limbs_value_6(mx_limb_t *limbs, mx_limb_t a, mx_limb_t b, mx_limb_t c, mx_limb_t d, mx_limb_t e, mx_limb_t f)
-{
-  set_limbs_value_5(limbs, a, b, c, d, e);
-  limbs[5] = f;
-}
-
-void set_limbs_value_7(mx_limb_t *limbs, mx_limb_t a, mx_limb_t b, mx_limb_t c, mx_limb_t d, mx_limb_t e, mx_limb_t f, mx_limb_t g)
-{
-  set_limbs_value_6(limbs, a, b, c, d, e, f);
-  limbs[6] = g;
 }
 
 Test(Floats, add)

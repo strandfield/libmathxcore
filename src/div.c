@@ -23,7 +23,12 @@ void int_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, 
 {
   assert(divisor->size != 0);
 
-  if (abs(divisor->size) == 1)
+  if (abs(divisor->size) > abs(dividend->size))
+  {
+    int_assign_zero(quotient);
+    int_assign(remainder, dividend);
+  }
+  else if (abs(divisor->size) == 1)
   {
     int_ensure_alloc(quotient, abs(dividend->size));
 

@@ -40,6 +40,10 @@ LIBMATHXCORE_API void float_assign_zero(mx_float_t *dest);
 LIBMATHXCORE_API void float_assign_limb(mx_float_t *dest, mx_limb_t val);
 LIBMATHXCORE_API void float_neg(mx_float_t *dest, const mx_float_t *src);
 
+LIBMATHXCORE_API void float_avg(mx_float_t *result, const mx_float_t *a, const mx_float_t *b);
+
+LIBMATHXCORE_API void float_lshift_assign(mx_float_t *x, mx_size_t n);
+
 LIBMATHXCORE_API void float_swap(mx_float_t *a, mx_float_t *b);
 
 LIBMATHXCORE_API void float_clear(mx_float_t *x);

@@ -89,3 +89,28 @@ void float_div(mx_float_t *result, const mx_float_t *a, const mx_float_t *b)
     float_clear(&u);
   }
 }
+
+/*@
+ * \fn void float_inv(mx_float_t *result, const mx_float_t *x)
+ * \brief Computes the inverse of a floating point number
+ * \param variable that will receive the result
+ * \param input variable
+ *
+ */
+void float_inv(mx_float_t *result, const mx_float_t *x)
+{
+  const mx_size_t prec = result->prec;
+
+  mx_float_t dividend;
+  float_init(&dividend);
+
+  const mx_size_t zeros = prec + 1 + abs(x->size);
+  float_ensure_alloc_zero(&dividend, zeros + 1);
+  dividend.limbs[zeros] = 1;
+  dividend.exp = -zeros;
+  dividend.size = zeros + 1;
+  
+  float_div(result, &dividend, x);
+
+  float_clear(&dividend);
+}
