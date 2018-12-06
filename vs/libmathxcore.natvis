@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="mx_integer_struct">
+    <Expand>
+      <Item Name="[size]">size</Item>
+      <Item Name="[alloc]">alloc</Item>
+      <ArrayItems>
+        <Size>size &lt; 0 ? -size : size</Size>
+        <ValuePointer>limbs</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="mx_float_struct">
+    <Expand>
+      <Item Name="[size]">size</Item>
+      <Item Name="[alloc]">alloc</Item>
+      <Item Name="[exp]">exp</Item>
+      <Item Name="[prec]">prec</Item>
+      <ArrayItems>
+        <Size>size &lt; 0 ? -size : size</Size>
+        <ValuePointer>limbs</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+</AutoVisualizer>
