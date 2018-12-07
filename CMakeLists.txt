@@ -28,6 +28,19 @@ set(MATHXCORE_LIMB_SIZE "8" CACHE STRING "limb size")
 target_compile_definitions(libmathxcore PUBLIC -DLIBMATHXCORE_LIMB_SIZE=${MATHXCORE_LIMB_SIZE})
 
 ##################################################################
+###### check if we need to link to the math library ('m')
+##################################################################
+
+include(CheckFunctionExists)
+
+CHECK_FUNCTION_EXISTS(log10 LOG10_EXISTS)
+if(NOT LOG10_EXISTS)
+  unset(LOG10_EXISTS)
+  message("Linking to lib m")
+  target_link_libraries(libmathxcore m)
+endif()
+
+##################################################################
 ###### tests
 ##################################################################
 
