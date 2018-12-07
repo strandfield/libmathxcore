@@ -20,9 +20,15 @@
 void float_add(mx_float_t *sum, const mx_float_t *addend1, const mx_float_t *addend2)
 {
   if (addend1->size == 0)
-    return float_assign(sum, addend2);
-  else if (addend2->size == 0)
-    return float_assign(sum, addend1);
+  {
+    float_assign(sum, addend2);
+    return;
+  }
+  else if (addend2->size == 0) 
+  {
+    float_assign(sum, addend1);
+    return;
+  }
 
   if (float_sign(addend1) != float_sign(addend2))
   {

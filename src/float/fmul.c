@@ -24,7 +24,7 @@ void float_mul(mx_float_t *product, const mx_float_t *factor1, const mx_float_t 
   u.size = abs(u.size);
   v.size = abs(v.size);
   mx_float_t *r = product;
-  const mx_size_t prec = r->prec;
+  const mx_ssize_t prec = r->prec;
   const int sign = float_sign(&u) * float_sign(&v);
 
   if (u.size > prec)
@@ -46,7 +46,7 @@ void float_mul(mx_float_t *product, const mx_float_t *factor1, const mx_float_t 
   r->exp = v.exp + u.exp;
 
   if (r->size > prec)
-    float_set_prec(r, prec);
+    float_set_prec(r, (mx_size_t) prec);
 
   r->size *= sign;
 }

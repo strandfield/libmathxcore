@@ -118,7 +118,7 @@ static int float_sub_handle_special_case(mx_float_t *r, mx_float_t *u, mx_float_
     return SPECIAL_CASE_HANDLED;
   }
 
-  const mx_size_t prec = r->prec;
+  const mx_ssize_t prec = r->prec;
 
   if (u->size > prec - 1)
   {
@@ -207,9 +207,15 @@ static int float_sub_handle_special_case(mx_float_t *r, mx_float_t *u, mx_float_
 void float_sub(mx_float_t *difference, const mx_float_t *minuend, const mx_float_t *subtrahend)
 {
   if (subtrahend->size == 0)
-    return float_assign(difference, minuend);
+  {
+    float_assign(difference, minuend);
+    return;
+  }
   else if (minuend->size == 0)
-    return float_neg(difference, minuend);
+  {
+    float_neg(difference, minuend);
+    return;
+  }
 
   if (float_sign(minuend) != float_sign(subtrahend))
   {
@@ -373,7 +379,7 @@ void float_sub(mx_float_t *difference, const mx_float_t *minuend, const mx_float
       float_ensure_alloc(r, v.size + hediff);
       mx_size_t size = v.size + hediff - u.size;
       r->limbs[0] = (((mx_limb_t)0) - v.limbs[0]);
-      for (mx_size_t i = 1; i < v.size; ++i)
+      for (mx_ssize_t i = 1; i < v.size; ++i)
         r->limbs[i] = ~v.limbs[i];
       for (mx_size_t i = v.size; i < size; ++i)
         r->limbs[i] = ~((mx_limb_t)0);

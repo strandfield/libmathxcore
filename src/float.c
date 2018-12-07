@@ -402,7 +402,7 @@ int float_comp(const mx_float_t *a, const mx_float_t *b)
     const int c = uint_comp(a->limbs + (abs_asize - abs_bsize), abs_bsize, b->limbs, abs_bsize);
     if (c != 0)
       return c * float_sign(a);
-    for (mx_size_t i = 0; i < abs_asize - abs_bsize; ++i)
+    for (int i = 0; i < abs_asize - abs_bsize; ++i)
     {
       if (a->limbs[i] != 0)
         return 1 * float_sign(a);
@@ -414,7 +414,7 @@ int float_comp(const mx_float_t *a, const mx_float_t *b)
     const int c = uint_comp(a->limbs, abs_asize, b->limbs + (abs_bsize - abs_asize), abs_asize);
     if (c != 0)
       return c * float_sign(a);
-    for (mx_size_t i = 0; i < (abs_bsize - abs_asize); ++i)
+    for (int i = 0; i < (abs_bsize - abs_asize); ++i)
     {
       if (b->limbs[i] != 0)
         return -1 * float_sign(a);

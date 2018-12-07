@@ -22,7 +22,10 @@ void float_div(mx_float_t *result, const mx_float_t *a, const mx_float_t *b)
   assert(b->size != 0);
 
   if (a->size == 0)
-    return float_assign_zero(result);
+  {
+    float_assign_zero(result);
+    return;
+  }
 
   mx_float_t u = *a;
   mx_float_t v = *b;
