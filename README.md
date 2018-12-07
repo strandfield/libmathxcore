@@ -68,7 +68,7 @@ The famous constant `pi` can be computed with the following code.
 ```c
 mx_float_t pi;
 // We want to compute pi on 128 bytes.
-float_init_prec(&pi, 128 / sizeof(mx_limb_t)); 
+float_init_prec(&pi, float_prec_bytes(128)); 
 float_assign_pi(&pi);
 float_print(&pi);
 float_clear(&pi);

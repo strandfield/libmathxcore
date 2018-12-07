@@ -27,6 +27,7 @@ typedef struct mx_float_struct mx_float_t;
 LIBMATHXCORE_API mx_size_t float_default_prec();
 LIBMATHXCORE_API mx_size_t float_set_default_prec(mx_size_t p);
 LIBMATHXCORE_API mx_size_t float_prec_bits(mx_size_t bitcount);
+LIBMATHXCORE_API mx_size_t float_prec_bytes(mx_size_t count);
 
 LIBMATHXCORE_API void float_init(mx_float_t *x);
 LIBMATHXCORE_API void float_init_prec(mx_float_t *x, mx_size_t p);

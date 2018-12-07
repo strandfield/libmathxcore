@@ -63,6 +63,20 @@ mx_size_t float_prec_bits(mx_size_t bitcount)
 }
 
 /*@
+ * \fn mx_size_t float_prec_bytes(mx_size_t count)
+ * \param byte count
+ * \brief Returns a precision based on a byte count
+ * 
+ */
+mx_size_t float_prec_bytes(mx_size_t count)
+{
+  mx_size_t ret = count / sizeof(mx_limb_t);
+  if (ret * sizeof(mx_limb_t) < ret)
+    ++ret;
+  return ret;
+}
+
+/*@
  * \fn void float_init(mx_float_t *x)
  * \param real number to initialize
  * \brief Initialize a floating-point number with the value 0

@@ -533,8 +533,17 @@ Test(Floats, print2)
   float_clear(&a);
 }
 
+Test(Floats, prec)
+{
+  Assert(float_prec_bytes(8) == 8 / sizeof(mx_limb_t));
+  Assert(float_prec_bits(8 * 8) == 8 / sizeof(mx_limb_t));
 
-TestSuite(Floats, add, sub, mul, print1, print2);
+  mx_size_t p = float_set_default_prec(float_prec_bytes(8));
+  Assert(p == float_prec_bytes(16));
+  float_set_default_prec(p);
+}
+
+TestSuite(Floats, add, sub, mul, print1, print2, prec);
 
 
 void register_floats_test_suite()
