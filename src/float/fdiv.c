@@ -107,7 +107,7 @@ void float_inv(mx_float_t *result, const mx_float_t *x)
   mx_float_t dividend;
   float_init(&dividend);
 
-  const mx_size_t zeros = prec + 1 + abs(x->size);
+  const mx_ssize_t zeros = prec + 1 + abs(x->size);
   float_ensure_alloc_zero(&dividend, zeros + 1);
   dividend.limbs[zeros] = 1;
   dividend.exp = -zeros;
