@@ -2,12 +2,15 @@
 #ifndef LIBMATHXCORE_DEFS_H
 #define LIBMATHXCORE_DEFS_H
 
+#if (defined(WIN32) || defined(_WIN32)) && !defined(LIBMATHXCORE_STATIC_LINKING)
 #if defined(LIBMATHXCORE_BUILD_LIB)
 #  define LIBMATHXCORE_API __declspec(dllexport)
 #else
 #  define LIBMATHXCORE_API __declspec(dllimport)
 #endif
-
+#else
+#define LIBMATHXCORE_API
+#endif
 
 
 #include <stdint.h>
