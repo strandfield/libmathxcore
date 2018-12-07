@@ -8,6 +8,7 @@
 #include "mathx/core/shift.h"
 
 #include <assert.h>
+#include <stddef.h>
 
 static const unsigned char bits_in_digit_table[32] = {
   0, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4,

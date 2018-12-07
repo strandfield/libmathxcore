@@ -11,9 +11,9 @@ struct test_case_struct
 
 typedef struct test_case_struct test_case_t;
 
-#define Test(Suite, Name) void test_##Suite##_##Name##(); \
-  test_case_t Suite##Name = {.suite = #Suite, .name = #Name, .callback = test_##Suite##_##Name## }; \
-  void test_##Suite##_##Name##()
+#define Test(Suite, Name) void test_##Suite##_##Name(); \
+  test_case_t Suite##Name = {.suite = #Suite, .name = #Name, .callback = test_##Suite##_##Name }; \
+  void test_##Suite##_##Name()
 
 
 struct test_suite_struct

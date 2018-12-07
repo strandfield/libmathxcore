@@ -19,7 +19,7 @@
 #include <stdint.h>
 
 typedef int mx_ssize_t;
-typedef size_t mx_size_t;
+typedef unsigned int mx_size_t;
 
 #if LIBMATHXCORE_LIMB_SIZE == 8
 

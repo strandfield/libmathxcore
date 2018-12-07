@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX(a, b) ((a) < (b) ? (b) : (a))
+
 /*@
  * \fn void float_div(mx_float_t *result, const mx_float_t *a, const mx_float_t *b)
  * \brief Divides two floating-point numbers.
@@ -57,7 +59,7 @@ void float_div(mx_float_t *result, const mx_float_t *a, const mx_float_t *b)
   else
   {
     // Otherwise we may even omit some digits of 'u'
-    const mx_ssize_t chop = max(-zeros, 0);
+    const mx_ssize_t chop = MAX(-zeros, 0);
     u.limbs += chop;
     u.size -= chop;
     u.exp += chop;
