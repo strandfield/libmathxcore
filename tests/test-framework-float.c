@@ -20,7 +20,7 @@ void printf_float_dec(const mx_float_t *x)
 {
   const mx_size_t buffer_size = 1024;
   char buffer[1024] = { 0 };
-  float_print(buffer, buffer_size, x);
+  float_sprint(buffer, buffer_size, x);
   printf("%s\n", buffer);
 }
 

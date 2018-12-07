@@ -20,12 +20,7 @@ void print_pi()
   
   float_assign_pi(&pi);
 
-  char *buffer = (char*) malloc(1024);
-  float_print(buffer, 1024, &pi);
-
-  printf("%s\n", buffer);
-
-  free(buffer);
+  float_print(&pi);
 
   float_clear(&pi);
 }

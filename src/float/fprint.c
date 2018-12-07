@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -39,7 +40,7 @@ mx_float_t get_pow_ten(unsigned int n, mx_size_t prec)
 }
 
 /*@
- * \fn mx_size_t float_print(char *out, mx_size_t s, const mx_float_t *x)
+ * \fn mx_size_t float_sprint(char *out, mx_size_t s, const mx_float_t *x)
  * \param output buffer
  * \param size of buffer
  * \param input number
@@ -50,7 +51,7 @@ mx_float_t get_pow_ten(unsigned int n, mx_size_t prec)
  * If \c s is less than that estimate, this function returns 0 and does not 
  * attempt to print the floating point number.
  */
-mx_size_t float_print(char *out, mx_size_t s, const mx_float_t *x)
+mx_size_t float_sprint(char *out, mx_size_t s, const mx_float_t *x)
 {
   mx_int_t digits;
   int_init(&digits);
@@ -83,6 +84,25 @@ mx_size_t float_print(char *out, mx_size_t s, const mx_float_t *x)
   }
 
   return written;
+}
+
+/*@
+ * \fn void float_print(const mx_float_t *x)
+ * \param input number
+ * \brief Prints a floating point number to stdout.
+ *
+ */
+void float_print(const mx_float_t *x)
+{
+  const int size_estimate = uint_print_size(NULL, x->prec + 3) + 1 + 1 + 9;
+  char *buffer = (char*)malloc(size_estimate);
+
+  const mx_size_t written = float_sprint(buffer, size_estimate, x);
+  assert(written > 0);
+
+  printf("%s", buffer);
+
+  free(buffer);
 }
 
 mx_exp_t float_dec_digits(mx_int_t *digits_out, const mx_float_t *x)

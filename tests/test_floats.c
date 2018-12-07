@@ -512,7 +512,7 @@ Test(Floats, print1)
 
   const mx_size_t buffer_size = 1024;
   char buffer[1024] = { 0 };
-  float_print(buffer, buffer_size, &a);
+  float_sprint(buffer, buffer_size, &a);
   printf("%s\n", buffer);
 
   float_clear(&a);
@@ -527,7 +527,7 @@ Test(Floats, print2)
 
   const mx_size_t buffer_size = 1024;
   char buffer[1024] = { 0 };
-  float_print(buffer, buffer_size, &a);
+  float_sprint(buffer, buffer_size, &a);
   printf("%s\n", buffer);
 
   float_clear(&a);
