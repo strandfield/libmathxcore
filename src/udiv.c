@@ -100,7 +100,7 @@ void uint_knuth_div(const mx_limb_t *a, mx_size_t as, const mx_limb_t *b, mx_siz
   // zero to $u$.
   // This step ensures that q_tilde is always a very good approximation 
   // of the true quotient digit.
-  d = sizeofbits(mx_limb_t) - bits_in_digit(v[size_v-1]);
+  d = sizeofbits(mx_limb_t) - bits_in_digit(b[bs-1]);
   mx_limb_t normalization_output = uint_lshift(b, bs, d, v);
   assert(normalization_output == 0);
   normalization_output = uint_lshift(a, as, d, u);

@@ -57,7 +57,7 @@ void int_div(mx_int_t *quotient, mx_int_t *remainder, const mx_int_t *dividend, 
   {
     int_ensure_alloc(quotient, 1 + abs(dividend->size) - abs(divisor->size));
     int_ensure_alloc(remainder, 1 + abs(dividend->size));
-    remainder->limbs[remainder->size] = 0; /// TODO: check if needed, or maybe modify uint_knuth_div
+    remainder->limbs[abs(dividend->size)] = 0; /// TODO: check if needed, or maybe modify uint_knuth_div
 
     uint_knuth_div(dividend->limbs, abs(dividend->size), divisor->limbs, abs(divisor->size), quotient->limbs, &(quotient->size), remainder->limbs, &(remainder->size));
   }
