@@ -11,7 +11,7 @@ int mx_version_major()
 
 int mx_version_minor()
 {
-  return 0;
+  return 3;
 }
 
 int mx_version_patch()
@@ -21,10 +21,10 @@ int mx_version_patch()
 
 const char* mx_version_prerelease_suffix()
 {
-  return "-dev";
+  return "";
 }
 
 const char* mx_version_string()
 {
-  return "0.0.0-dev";
+  return "0.3.0";
 }
