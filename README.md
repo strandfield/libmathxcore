@@ -2,15 +2,15 @@
 
 # `libmathxcore` - A C library for arbitrary-precision arithmetic 
 
-[![Build Status](https://travis-ci.org/RugessNome/libmathxcore.svg?branch=master)](https://travis-ci.org/RugessNome/libmathxcore)
-[![codecov](https://codecov.io/gh/RugessNome/libmathxcore/branch/master/graph/badge.svg)](https://codecov.io/gh/RugessNome/libmathxcore)
+[![Build Status](https://travis-ci.org/bandicode/libmathxcore.svg?branch=master)](https://travis-ci.org/bandicode/libmathxcore)
+[![codecov](https://codecov.io/gh/bandicode/libmathxcore/branch/master/graph/badge.svg)](https://codecov.io/gh/bandicode/libmathxcore)
 
 `libmathxcore` is a library for high-precision integer and floating-point arithmetic.
 
 ## Building
 
 ```
-git clone https://github.com/RugessNome/libmathxcore.git
+git clone https://github.com/bandicode/libmathxcore.git
 mkdir && cd build
 cmake ..
 make
