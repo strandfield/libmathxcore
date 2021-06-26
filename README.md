@@ -11,7 +11,8 @@
 
 ```
 git clone https://github.com/strandfield/libmathxcore.git
-mkdir && cd build
+cd libmathxcore
+mkdir build && cd build
 cmake ..
 make
 ```
